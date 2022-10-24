@@ -1,31 +1,66 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="container-fluid">
+    <Header />
+    <div id="grid" class="container-fluid">
+      <div v-for="n in gridRowCount" class="gridRow" >
+        <span v-for="n in gridColCount" class="gridCell" ></span>
+      </div>
+    </div>
+    <Header />
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
+<script>
+import Header from "./components/Header.vue"
+
+export default {
+  data() {
+    return {
+      gridCount: 50,
+    }
+  },
+  computed: {
+    gridClass() {
+      return `row-cols-${this.gridCount}`
+    },
+    gridRowCount() {
+      return this.gridCount;
+    },
+    gridColCount() {
+      return this.gridCount;
+    }
+  },
+  components: {
+    Header
+  }
+}
+</script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
+#grid {
+  padding: 0px;
+  margin: 1px;
+  display: flex;
+  flex-direction: column;
+  border-left: solid 1px grey;
+  border-top: solid 1px grey;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.gridRow{
+  background-color: yellow;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.gridCell{
+  background-color: lightgrey;
+  color: lightgrey;
+  padding: 0;
+  margin: 0;
+  border-right: solid 1px grey;
+  border-bottom: solid 1px grey;
+  flex-grow: 1;
+  aspect-ratio: 1/1;
 }
 </style>
