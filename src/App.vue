@@ -1,17 +1,14 @@
 <template>
   <div class="container-fluid">
     <Header />
-    <div id="grid" class="container-fluid">
-      <div v-for="n in gridRowCount" class="gridRow" >
-        <span v-for="n in gridColCount" class="gridCell" ></span>
-      </div>
-    </div>
+    <CanvasComp canvasID="mainCanvas" />
     <Header />
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue"
+import * as CanvasComp from "./components/Canvas.vue"
 
 export default {
   data() {
@@ -31,7 +28,8 @@ export default {
     }
   },
   components: {
-    Header
+    Header,
+    CanvasComp,
   }
 }
 </script>
