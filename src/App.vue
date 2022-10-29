@@ -1,7 +1,9 @@
 <template>
   <div class="container-fluid">
     <Header />
-    <CanvasComp canvasID="mainCanvas" :gridSize=50 />
+    <div>
+      <CanvasComp canvasID="mainCanvas" :gridCount=10 />
+    </div>
     <Header />
   </div>
 </template>

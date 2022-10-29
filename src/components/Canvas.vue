@@ -9,7 +9,9 @@ export default {
         return {
             canvas: undefined,
             ctx: undefined,
-            gridArray: []
+            grid: {},
+            gridArray: [],
+            gridWidth: undefined
         }
     },
     props: {
@@ -17,7 +19,7 @@ export default {
             type: String,
             required: true,
         },
-        gridSize: {
+        gridCount: {
             type: Number,
             required: true,
         }
@@ -25,41 +27,44 @@ export default {
     methods: {
         setCanvasSize() {
             this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight-130;
+            this.canvas.height = window.innerHeight-120; //manually compensating for the footer height for now.
             
+            this.grid.gridSize = this.canvas.width > this.canvas.height ? this.canvas.height : this.canvas.width;
+            
+            this.grid.left = 0 + (this.canvas.width - this.grid.gridSize)/2;
+            this.grid.top = 0 + (this.canvas.height - this.grid.gridSize)/2;
+            
+
             this.ctx.fillStyle = "#f5f5f0";
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.fillRect(this.grid.left, this.grid.top, this.grid.gridSize, this.grid.gridSize);
 
             this.gridInit();
 
         },
         gridInit() {
-            const cellWidth = this.canvas.width / this.gridSize;
-            const cellHeight = this.canvas.height / this.gridSize;
+            this.grid.cellSize = this.grid.gridSize / this.gridCount;
 
             this.ctx.strokeStyle = "#3d3d29";
 
             let gridIndex = 0;
 
-            this.gridArray = [];
+            this.grid.array = [];
 
-            for (let i = 0; i < this.gridSize; i++ ) {
-                for (let j = 0; j < this.gridSize; j++) {
-                    this.gridArray.push({
-                        startX: cellWidth * i,
-                        startY: cellHeight * j,
+            for (let i = 0; i < this.gridCount; i++ ) {
+                for (let j = 0; j < this.gridCount; j++) {
+                    this.grid.array.push({
+                        startX: this.grid.left + this.grid.cellSize * i,
+                        startY: this.grid.top + this.grid.cellSize * j,
                     });
                     this.ctx.strokeRect(
-                        this.gridArray[gridIndex].startX,
-                        this.gridArray[gridIndex].startY,
-                        cellWidth,
-                        cellHeight
+                        this.grid.array[gridIndex].startX,
+                        this.grid.array[gridIndex].startY,
+                        this.grid.cellSize,
+                        this.grid.cellSize
                         );
                     gridIndex++;
                 }
             }
-
-            console.log(this.gridArray)
         }
     },
     mounted() {
