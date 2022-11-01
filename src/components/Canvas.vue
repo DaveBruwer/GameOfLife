@@ -22,6 +22,10 @@ export default {
         gridCount: {
             type: Number,
             required: true,
+        },
+        delay: {
+            type: Number,
+            default: 1,
         }
     },
     methods: {
@@ -44,23 +48,15 @@ export default {
         gridInit() {
             this.grid.cellSize = this.grid.gridSize / Math.sqrt(this.grid.array.length);
 
-            this.ctx.strokeStyle = "#3d3d29";
-
+            
             this.grid.array.forEach((cell, i) => {
                 cell.row = i%Math.sqrt(this.grid.array.length);
                 cell.col = Math.floor(i/Math.sqrt(this.grid.array.length));
-
+                
                 cell.left = this.grid.left + this.grid.cellSize * (cell.row);
                 cell.top = this.grid.top + this.grid.cellSize * (cell.col);
                 
-                this.ctx.strokeRect(
-                    cell.left,
-                    cell.top,
-                    this.grid.cellSize,
-                    this.grid.cellSize
-                );
-                    
-                if (cell.row === cell.col) {
+                if (Math.random() > 0.5) {
                     this.ctx.fillStyle = "#adad85";
                     this.ctx.fillRect(
                         cell.left,
@@ -70,20 +66,24 @@ export default {
                     );
                     this.grid.array[i].alive = true;
                 }
-                // console.log(this.grid.array);
+                    
+                this.ctx.strokeStyle = "#3d3d29";
+                this.ctx.strokeRect(
+                    cell.left,
+                    cell.top,
+                    this.grid.cellSize,
+                    this.grid.cellSize
+                );
             });
             
-            this.grid.array.forEach((cell, i) => {
-                this.crowdSize(cell);
-            })
-                        
-            // this.gridUpdate();
+            this.runAnimation();                        
 
         },
         gridUpdate() {
             // Turns cells "on" or "off" based on their .alive property.
+
             for (let cell of this.grid.array) {
-                if (cell.alive) {
+                if (cell.nextAlive) {
                     this.ctx.fillStyle = "#adad85";
                     this.ctx.fillRect(
                         cell.left,
@@ -91,39 +91,64 @@ export default {
                         this.grid.cellSize,
                         this.grid.cellSize
                     );
+                } else {
+                    this.ctx.fillStyle = "#f5f5f0";
+                    this.ctx.fillRect(
+                        cell.left,
+                        cell.top,
+                        this.grid.cellSize,
+                        this.grid.cellSize
+                    );
                 }
+
+                cell.alive = cell.nextAlive;
+
+                this.ctx.strokeStyle = "#3d3d29";
+                this.ctx.strokeRect(
+                    cell.left,
+                    cell.top,
+                    this.grid.cellSize,
+                    this.grid.cellSize
+                );
             }
+
+            setTimeout(this.lifeUpdate, this.delay*1000);
         },
         lifeUpdate() {
             // updates cells .alive property based on the rules of the game.
             for(let cell of this.grid.array) {
-                console.log(this.grid.array);
-                this.crowdSize(cell);
+                const crowd = this.crowdSize(cell);
+
+                if (cell.alive) {
+                    if (crowd < 2 || crowd > 3) {
+                        cell.nextAlive = false;
+                    } else {
+                        cell.nextAlive = true;
+                    }
+                } else {
+                    if (crowd == 3) {
+                        cell.nextAlive = true;
+                    }
+                }
+
             }
+
+            requestAnimationFrame(this.gridUpdate);
         },
         crowdSize(cell) {
             let crowdSize = 0;
-            const idx = cell.col + cell.row*5;
+            const idx = cell.col + cell.row*this.gridCount;
 
             for (let i = -1; i < 2; i++) {
                 for (let j = -1; j < 2; j++) {
                     const thisCol = cell.col + j;
                     const thisRow = cell.row + i;
-                    console.log(`cell row: ${cell.row}, cell col: ${cell.col}`);
-                    console.log(`this row: ${thisRow}, this col: ${thisCol}`);
-                    if (thisCol >= 0 && thisCol < 5) {
-                        if (thisRow >= 0 && thisRow < 5) {
-                            console.log(thisRow != cell.row || thisCol != cell.col);
+                    if (thisCol >= 0 && thisCol < this.gridCount) {
+                        if (thisRow >= 0 && thisRow < this.gridCount) {
                             if (thisRow != cell.row || thisCol != cell.col) {
-                                const thisIdx = thisCol + thisRow*5;
-                                console.log(thisIdx);
-                                console.log(this.grid.array[thisIdx].alive);
-                                console.log(this.grid.array[6].alive);
-                                console.log(this.grid.array[6]);
-                                console.log(this.grid.array[6].target);
+                                const thisIdx = thisCol + thisRow*this.gridCount;
                                 if (this.grid.array[thisIdx].alive) {
                                     crowdSize++
-                                    console.log("crowdSize: " + crowdSize);
                                 }
                             }
                         }
@@ -132,8 +157,13 @@ export default {
             }
             return crowdSize;
         },
+        runAnimation() {
+            setTimeout(this.lifeUpdate, this.delay*1000);
+            // this.runAnimation();
+        }
     },
     mounted() {
+        console.log(this.delay);
         for (let i = 0; i < this.gridCount*this.gridCount; i++) {
             this.grid.array.push({
                 top: 0,
