@@ -9,7 +9,9 @@ export default {
         return {
             canvas: undefined,
             ctx: undefined,
-            grid: {},
+            grid: {
+                array: [],
+            },
         }
     },
     props: {
@@ -68,9 +70,12 @@ export default {
                     );
                     this.grid.array[i].alive = true;
                 }
-                console.log(this.grid.array);
-                console.log(this.crowdSize(cell));
+                // console.log(this.grid.array);
             });
+            
+            this.grid.array.forEach((cell, i) => {
+                this.crowdSize(cell);
+            })
                         
             // this.gridUpdate();
 
@@ -117,8 +122,8 @@ export default {
                                 console.log(this.grid.array[6]);
                                 console.log(this.grid.array[6].target);
                                 if (this.grid.array[thisIdx].alive) {
-                                    console.log("crowdSize");
                                     crowdSize++
+                                    console.log("crowdSize: " + crowdSize);
                                 }
                             }
                         }
@@ -129,7 +134,6 @@ export default {
         },
     },
     mounted() {
-        this.grid.array = [];
         for (let i = 0; i < this.gridCount*this.gridCount; i++) {
             this.grid.array.push({
                 top: 0,
