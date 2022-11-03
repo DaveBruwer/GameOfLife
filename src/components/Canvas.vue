@@ -15,18 +15,36 @@ export default {
         }
     },
     props: {
-        canvasID: {
+        canvasID: { // The canvas ID passed down from parent component.
             type: String,
             required: true,
         },
-        gridCount: {
+        gridCount: { // Determines the size of the grid, aka the number of squares in a row.
             type: Number,
             required: true,
         },
-        delay: {
+        delay: { // Delay time in seconds between grid updates.
             type: Number,
             default: 1,
         }
+    },
+    mounted() {
+        for (let i = 0; i < this.gridCount*this.gridCount; i++) {
+            this.grid.array.push({
+                top: 0,
+                left: 0,
+                alive: false,
+            });
+        }
+
+        this.canvas = document.getElementById(this.canvasID);
+        this.ctx = this.canvas.getContext('2d');
+        this.setCanvasSize();
+
+        window.addEventListener("resize", this.setCanvasSize);
+
+        this.gridUpdate();
+        
     },
     methods: {
         setCanvasSize() {
@@ -34,18 +52,14 @@ export default {
             this.canvas.height = window.innerHeight-120; //manually compensating for the footer height for now.
             
             this.grid.gridSize = this.canvas.width > this.canvas.height ? this.canvas.height : this.canvas.width;
-            
+
+            // Starting coordinates of the grid.
             this.grid.left = 0 + (this.canvas.width - this.grid.gridSize)/2;
             this.grid.top = 0 + (this.canvas.height - this.grid.gridSize)/2;
-            
-
-            this.ctx.fillStyle = "#f5f5f0";
-            this.ctx.fillRect(this.grid.left, this.grid.top, this.grid.gridSize, this.grid.gridSize);
-
-            this.gridInit();
 
         },
         gridInit() {
+        // Determines the coordinates of each cell in the grid.
             this.grid.cellSize = this.grid.gridSize / Math.sqrt(this.grid.array.length);
 
             
@@ -55,34 +69,33 @@ export default {
                 
                 cell.left = this.grid.left + this.grid.cellSize * (cell.row);
                 cell.top = this.grid.top + this.grid.cellSize * (cell.col);
-                
-                if (Math.random() > 0.5) {
-                    this.ctx.fillStyle = "#adad85";
-                    this.ctx.fillRect(
-                        cell.left,
-                        cell.top,
-                        this.grid.cellSize,
-                        this.grid.cellSize
-                    );
-                    this.grid.array[i].alive = true;
+
+                // Randomly turns cells on. Will take this out later.
+                if (this.grid.init) {
+                    if (Math.random() > 0.5) {
+                        this.grid.array[i].nextAlive = true;
+                    }
+                    this.grid.init = true;
                 }
-                    
-                this.ctx.strokeStyle = "#3d3d29";
-                this.ctx.strokeRect(
+            });
+        },
+        gridUpdate() {
+        // Turns cells "on" or "off" based on their .nextAlive property and then updates the .alive property to reflect current state.
+
+            // Initialize the grid if not yet done.
+            this.gridInit();
+
+            for (let cell of this.grid.array) {
+
+                // Clear all pixels on cell.
+                this.ctx.clearRect(
                     cell.left,
                     cell.top,
                     this.grid.cellSize,
                     this.grid.cellSize
                 );
-            });
-            
-            this.runAnimation();                        
 
-        },
-        gridUpdate() {
-            // Turns cells "on" or "off" based on their .alive property.
-
-            for (let cell of this.grid.array) {
+                // Fills the cell colour based on the cell.nextAlive attribute.
                 if (cell.nextAlive) {
                     this.ctx.fillStyle = "#adad85";
                     this.ctx.fillRect(
@@ -101,8 +114,10 @@ export default {
                     );
                 }
 
+                // Updates the cell.alive property to match updated state.
                 cell.alive = cell.nextAlive;
 
+                // draw the borders of each cell to prevent fading borders.
                 this.ctx.strokeStyle = "#3d3d29";
                 this.ctx.strokeRect(
                     cell.left,
@@ -130,9 +145,7 @@ export default {
                         cell.nextAlive = true;
                     }
                 }
-
             }
-
             requestAnimationFrame(this.gridUpdate);
         },
         crowdSize(cell) {
@@ -156,28 +169,7 @@ export default {
                 }
             }
             return crowdSize;
-        },
-        runAnimation() {
-            setTimeout(this.lifeUpdate, this.delay*1000);
-            // this.runAnimation();
         }
-    },
-    mounted() {
-        console.log(this.delay);
-        for (let i = 0; i < this.gridCount*this.gridCount; i++) {
-            this.grid.array.push({
-                top: 0,
-                left: 0,
-                alive: false,
-            });
-        }
-
-        this.canvas = document.getElementById(this.canvasID);
-        this.ctx = this.canvas.getContext('2d');
-        this.setCanvasSize();
-
-        window.addEventListener("resize", this.setCanvasSize)
-        
     }
 }
 
