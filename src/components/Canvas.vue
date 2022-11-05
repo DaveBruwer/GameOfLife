@@ -1,8 +1,10 @@
 <template>
     <canvas :id="canvasID" class="mainCanvas"></canvas>
+    <Controls />
 </template>
 
 <script>
+import Controls from "./Controls.vue"
 
 export default {
     data() {
@@ -13,6 +15,9 @@ export default {
                 array: [],
             },
         }
+    },
+    components: {
+        Controls,
     },
     props: {
         canvasID: { // The canvas ID passed down from parent component.
@@ -124,8 +129,8 @@ export default {
                 // }
 
                 // this.ctx.strokeText(cell.crowd, cell.left + 7, cell.top+15);
-                this.ctx.strokeText(i, cell.left + 3, cell.top+22);
-                this.ctx.strokeText(`${cell.row}/${cell.col}`, cell.left + 1, cell.top+10);
+                // this.ctx.strokeText(i, cell.left + 3, cell.top+22);
+                // this.ctx.strokeText(`${cell.row}/${cell.col}`, cell.left + 1, cell.top+10);
 
             });
 
