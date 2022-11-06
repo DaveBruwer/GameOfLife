@@ -1,6 +1,6 @@
 <template>
     <canvas :id="canvasID" class="mainCanvas"></canvas>
-    <Controls />
+    <Controls :playPause="playPause" :lifeUpdate="lifeUpdate" />
 </template>
 
 <script>
@@ -49,6 +49,8 @@ export default {
         this.ctx = this.canvas.getContext('2d');
         this.setCanvasSize();
 
+        this.grid.playing = false;
+
         window.addEventListener("resize", this.setCanvasSize);
     },
     methods: {
@@ -74,9 +76,10 @@ export default {
                 
                 cell.left = this.grid.left + this.grid.cellSize * (cell.row);
                 cell.top = this.grid.top + this.grid.cellSize * (cell.col);
-            });
 
-            this.lifeUpdate();
+            });
+            
+            this.gridUpdate();
         },
         gridUpdate() {
         // Turns cells "on" or "off" based on their .nextAlive property and then updates the .alive property to reflect current state.
@@ -134,7 +137,8 @@ export default {
 
             });
 
-            setTimeout(this.lifeUpdate, this.delay*1000);
+            setTimeout(() => { if(this.grid.playing) {this.lifeUpdate()}}, this.delay*1000);
+
         },
         lifeUpdate() {
             // updates cells .alive property based on the rules of the game.
@@ -203,6 +207,13 @@ export default {
             //     }
             // }
             return crowdSize;
+        }, 
+        playPause() {
+            this.grid.playing = !this.grid.playing;
+
+            if (this.grid.playing) {
+                this.lifeUpdate();
+            }
         }
     }
 }
