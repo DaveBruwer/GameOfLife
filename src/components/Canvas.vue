@@ -1,6 +1,6 @@
 <template>
     <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
-    <Controls :playPause="playPause" :lifeUpdate="lifeUpdate" />
+    <Controls :playPause="playPause" :lifeUpdate="lifeUpdate" @speedUpdate="speedUpdate" />
 </template>
 
 <script>
@@ -11,6 +11,7 @@ export default {
         return {
             canvas: undefined,
             ctx: undefined,
+            delay: 0.5,
             grid: {
                 array: [],
             },
@@ -28,10 +29,6 @@ export default {
             type: Number,
             required: true,
         },
-        delay: { // Delay time in seconds between grid updates.
-            type: Number,
-            default: 1,
-        }
     },
     mounted() {
         for (let i = 0; i < this.gridCount*this.gridCount; i++) {
@@ -39,8 +36,8 @@ export default {
                 top: 0,
                 left: 0,
                 alive: false,
-                nextAlive: false,
-                // nextAlive: Math.random() > 0.5 ? true : false,
+                // nextAlive: false,
+                nextAlive: Math.random() > 0.5 ? true : false,
                 crowd: 0,
 
             });
@@ -250,6 +247,9 @@ export default {
 
 
 
+        },
+        speedUpdate(e) {
+            this.delay = e;
         }
     }
 }
