@@ -1,5 +1,5 @@
 <template>
-    <canvas :id="canvasID" class="mainCanvas"></canvas>
+    <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
     <Controls :playPause="playPause" :lifeUpdate="lifeUpdate" />
 </template>
 
@@ -39,7 +39,8 @@ export default {
                 top: 0,
                 left: 0,
                 alive: false,
-                nextAlive: Math.random() > 0.5 ? true : false,
+                nextAlive: false,
+                // nextAlive: Math.random() > 0.5 ? true : false,
                 crowd: 0,
 
             });
@@ -53,10 +54,22 @@ export default {
 
         window.addEventListener("resize", this.setCanvasSize);
     },
+    computed: {
+        canvasTop() {
+            const _canvas = document.getElementById(this.canvasID);
+
+            return _canvas.offsetTop;
+        },
+        canvasLeft() {
+            const _canvas = document.getElementById(this.canvasID);
+
+            return _canvas.offsetLeft;
+        }
+    },
     methods: {
         setCanvasSize() {
             this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight-120; //manually compensating for the footer height for now.
+            this.canvas.height = window.innerHeight-150; //manually compensating for the footer height for now.
             
             this.grid.gridSize = this.canvas.width > this.canvas.height ? this.canvas.height : this.canvas.width;
 
@@ -86,59 +99,62 @@ export default {
 
             this.grid.array.forEach((cell, i) => {
 
-                // Clear all pixels on cell.
-                this.ctx.clearRect(
-                    cell.left,
-                    cell.top,
-                    this.grid.cellSize,
-                    this.grid.cellSize
-                );
-
-                // Fills the cell colour based on the cell.nextAlive attribute.
-                if (cell.nextAlive) {
-                    this.ctx.fillStyle = "#adad85";
-                    this.ctx.fillRect(
-                        cell.left,
-                        cell.top,
-                        this.grid.cellSize,
-                        this.grid.cellSize
-                    );
-                } else {
-                    this.ctx.fillStyle = "#f5f5f0";
-                    this.ctx.fillRect(
-                        cell.left,
-                        cell.top,
-                        this.grid.cellSize,
-                        this.grid.cellSize
-                    );
-                }
-
-                // Updates the cell.alive property to match updated state.
-                cell.alive = cell.nextAlive;
-
-                // draw the borders of each cell to prevent fading borders.
-                this.ctx.strokeStyle = "#3d3d29";
-                this.ctx.strokeRect(
-                    cell.left,
-                    cell.top,
-                    this.grid.cellSize,
-                    this.grid.cellSize
-                );
-                
-                // if (cell.alive) {
-                //     this.ctx.strokeText("a", cell.left + 7, cell.top+15);
-                // } else {
-                //     this.ctx.strokeText("", cell.left + 7, cell.top+15);
-                // }
-
-                // this.ctx.strokeText(cell.crowd, cell.left + 7, cell.top+15);
-                // this.ctx.strokeText(i, cell.left + 3, cell.top+22);
-                // this.ctx.strokeText(`${cell.row}/${cell.col}`, cell.left + 1, cell.top+10);
+                this.cellUpdate(cell, i);                
 
             });
 
             setTimeout(() => { if(this.grid.playing) {this.lifeUpdate()}}, this.delay*1000);
 
+        },
+        cellUpdate(cell, i) {
+            // Clear all pixels on cell.
+            this.ctx.clearRect(
+                cell.left,
+                cell.top,
+                this.grid.cellSize,
+                this.grid.cellSize
+            );
+
+            // Fills the cell colour based on the cell.nextAlive attribute.
+            if (cell.nextAlive) {
+                this.ctx.fillStyle = "#adad85";
+                this.ctx.fillRect(
+                    cell.left,
+                    cell.top,
+                    this.grid.cellSize,
+                    this.grid.cellSize
+                );
+            } else {
+                this.ctx.fillStyle = "#f5f5f0";
+                this.ctx.fillRect(
+                    cell.left,
+                    cell.top,
+                    this.grid.cellSize,
+                    this.grid.cellSize
+                );
+            }
+
+            // Updates the cell.alive property to match updated state.
+            cell.alive = cell.nextAlive;
+
+            // draw the borders of the cell to prevent fading borders.
+            this.ctx.strokeStyle = "#3d3d29";
+            this.ctx.strokeRect(
+                cell.left,
+                cell.top,
+                this.grid.cellSize,
+                this.grid.cellSize
+            );
+            
+            // if (cell.alive) {
+            //     this.ctx.strokeText("a", cell.left + 7, cell.top+15);
+            // } else {
+            //     this.ctx.strokeText("", cell.left + 7, cell.top+15);
+            // }
+
+            // this.ctx.strokeText(cell.crowd, cell.left + 7, cell.top+15);
+            // this.ctx.strokeText(i, cell.left + 3, cell.top+22);
+            // this.ctx.strokeText(`${cell.row}/${cell.col}`, cell.left + 1, cell.top+10);
         },
         lifeUpdate() {
             // updates cells .alive property based on the rules of the game.
@@ -214,6 +230,26 @@ export default {
             if (this.grid.playing) {
                 this.lifeUpdate();
             }
+        },
+        toggleCell(e) {
+            const clickx = e.x - this.grid.left - this.canvasLeft;
+            const clicky = e.y - this.grid.top - this.canvasTop;
+
+            const _col = Math.ceil(clickx / this.grid.cellSize) -1;
+            const _row = Math.ceil(clicky / this.grid.cellSize) -1;
+
+            if (_col >= 0 && _col < 25) {
+                if (_row >= 0 && _row < 25) {
+                    const _indx = _row*this.gridCount + _col;
+        
+                    this.grid.array[_indx].nextAlive = !this.grid.array[_indx].nextAlive;
+        
+                    this.cellUpdate(this.grid.array[_indx], _indx);
+                }
+            }
+
+
+
         }
     }
 }

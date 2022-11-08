@@ -1,8 +1,8 @@
 <template>
   <div class="container-fluid">
-    <Header />
+    <Header id="header" />
     <div>
-      <CanvasComp canvasID="mainCanvas" :gridCount=25 :delay=1 />
+      <CanvasComp canvasID="mainCanvas" :gridCount=25 :delay=0.5 />
     </div>
     <Footer />
   </div>
@@ -18,9 +18,6 @@ export default {
     return {
       
     }
-  },
-  computed: {
-   
   },
   components: {
     Header,
