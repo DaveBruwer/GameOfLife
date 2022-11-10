@@ -1,6 +1,6 @@
 <template>
     <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
-    <Controls :playPause="playPause" :lifeUpdate="lifeUpdate" @speedUpdate="speedUpdate" />
+    <Controls :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @speedUpdate="speedUpdate" @sizeUpdate="sizeUpdate"/>
 </template>
 
 <script>
@@ -14,6 +14,10 @@ export default {
             delay: 0.5,
             grid: {
                 array: [],
+                playing: false,
+                started: false,
+                count: 25,
+                startingArray: [],
             },
         }
     },
@@ -25,29 +29,11 @@ export default {
             type: String,
             required: true,
         },
-        gridCount: { // Determines the size of the grid, aka the number of squares in a row.
-            type: Number,
-            required: true,
-        },
     },
     mounted() {
-        for (let i = 0; i < this.gridCount*this.gridCount; i++) {
-            this.grid.array.push({
-                top: 0,
-                left: 0,
-                alive: false,
-                // nextAlive: false,
-                nextAlive: Math.random() > 0.5 ? true : false,
-                crowd: 0,
-
-            });
-        }
-
         this.canvas = document.getElementById(this.canvasID);
         this.ctx = this.canvas.getContext('2d');
         this.setCanvasSize();
-
-        this.grid.playing = false;
 
         window.addEventListener("resize", this.setCanvasSize);
     },
@@ -77,18 +63,28 @@ export default {
             this.gridInit();
         },
         gridInit() {
-        // Determines the coordinates of each cell in the grid.
-            this.grid.cellSize = this.grid.gridSize / Math.sqrt(this.grid.array.length);
-
-            this.grid.array.forEach((cell, i) => {
-                cell.row = i%Math.sqrt(this.grid.array.length);
-                cell.col = Math.floor(i/Math.sqrt(this.grid.array.length));
-                
-                cell.left = this.grid.left + this.grid.cellSize * (cell.row);
-                cell.top = this.grid.top + this.grid.cellSize * (cell.col);
-
-            });
+            // Determines the coordinates of each cell in the grid.
+            this.grid.cellSize = this.grid.gridSize / this.grid.count;
             
+            const numOfCells = this.grid.count*this.grid.count;
+
+            for (let i = 0; i < numOfCells; i++) {
+                const _col = Math.floor(i/this.grid.count);
+                const _row = i%this.grid.count;
+
+                this.grid.array.push({
+                    row: _row,
+                    col: _col,
+                    top: this.grid.top + this.grid.cellSize * (_col),
+                    left: this.grid.left + this.grid.cellSize * (_row),
+                    alive: false,
+                    // nextAlive: false,
+                    nextAlive: Math.random() > 0.5 ? true : false,
+                    crowd: 0,
+
+                });
+            }
+
             this.gridUpdate();
         },
         gridUpdate() {
@@ -175,7 +171,7 @@ export default {
         },
         crowdSize(cell, idx) {
             let crowdSize = 0;
-            // const idx = cell.col + cell.row*this.gridCount;
+            // const idx = cell.col + cell.row*this.grid.count;
 
             // const neighbours = [-26, -25, -24, -1, 1, 24, 25, 26];
             const neighbours = [];
@@ -183,11 +179,11 @@ export default {
             if (cell.row > 0) {neighbours.push(-1)};
             if (cell.col > 0) {neighbours.push(-25)};
             if (cell.row > 0 && cell.col > 0) {neighbours.push(-26)};
-            if (cell.row < this.gridCount-1 && cell.col > 0) {neighbours.push(-24)};
-            if (cell.row < this.gridCount-1) {neighbours.push(1)};
-            if (cell.row > 0 && cell.col < this.gridCount-1) {neighbours.push(24)};
-            if (cell.col < this.gridCount-1) {neighbours.push(25)};
-            if (cell.row < this.gridCount-1 && cell.col < this.gridCount-1) {neighbours.push(26)};
+            if (cell.row < this.grid.count-1 && cell.col > 0) {neighbours.push(-24)};
+            if (cell.row < this.grid.count-1) {neighbours.push(1)};
+            if (cell.row > 0 && cell.col < this.grid.count-1) {neighbours.push(24)};
+            if (cell.col < this.grid.count-1) {neighbours.push(25)};
+            if (cell.row < this.grid.count-1 && cell.col < this.grid.count-1) {neighbours.push(26)};
 
             // console.log(cell.row);
             // console.log(cell.col);
@@ -203,26 +199,21 @@ export default {
                 }
             })
 
-            // for (let i = -1; i < 2; i++) {
-            //     for (let j = -1; j < 2; j++) {
-            //         const thisCol = cell.col + j;
-            //         const thisRow = cell.row + i;
-            //         if (thisCol >= 0 && thisCol < this.gridCount) {
-            //             if (thisRow >= 0 && thisRow < this.gridCount) {
-            //                 if (thisRow != cell.row || thisCol != cell.col) {
-            //                     const thisIdx = thisCol + thisRow*this.gridCount;
-            //                     if (this.grid.array[thisIdx].alive) {
-            //                         crowdSize++
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
             return crowdSize;
         }, 
         playPause() {
+
+            if (!this.grid.started) {
+                this.grid.started = true;
+
+                this.grid.startingArray = this.grid.array.slice();
+
+                console.log(this.grid.startingArray);
+                console.log(this.grid.array);
+            }
+
             this.grid.playing = !this.grid.playing;
+            console.log(this.grid.playing)
 
             if (this.grid.playing) {
                 this.lifeUpdate();
@@ -237,19 +228,29 @@ export default {
 
             if (_col >= 0 && _col < 25) {
                 if (_row >= 0 && _row < 25) {
-                    const _indx = _row*this.gridCount + _col;
+                    const _indx = _row*this.grid.count + _col;
         
                     this.grid.array[_indx].nextAlive = !this.grid.array[_indx].nextAlive;
         
                     this.cellUpdate(this.grid.array[_indx], _indx);
                 }
             }
-
-
-
+        },
+        resetGrid() {
+            console.log("reset grid");
+            this.grid.array = [];
+            this.grid.array = this.grid.startingArray.slice();
+            console.log(this.grid.startingArray);
+            console.log(this.grid.array);
+            this.grid.started = false;
+            // this.gridUpdate();
         },
         speedUpdate(e) {
             this.delay = e;
+        },
+        sizeUpdate(e) {
+            this.grid.count = e;
+            this.gridInit();
         }
     }
 }

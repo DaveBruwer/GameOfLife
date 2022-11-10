@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <Header id="header" />
     <div>
-      <CanvasComp canvasID="mainCanvas" :gridCount=25 />
+      <CanvasComp canvasID="mainCanvas" />
     </div>
     <Footer />
   </div>
