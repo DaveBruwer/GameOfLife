@@ -78,14 +78,24 @@ export default {
                     top: this.grid.top + this.grid.cellSize * (_col),
                     left: this.grid.left + this.grid.cellSize * (_row),
                     alive: false,
-                    // nextAlive: false,
-                    nextAlive: Math.random() > 0.5 ? true : false,
+                    nextAlive: false,
+                    // nextAlive: Math.random() > 0.5 ? true : false,
                     crowd: 0,
 
                 });
             }
 
             this.gridUpdate();
+        },
+        gridSnapshot() {
+            this.grid.startingArray = [];
+            this.grid.array.forEach((cell) => {
+                if (cell.nextAlive == true) {
+                    this.grid.startingArray.push(true)
+                } else {
+                    this.grid.startingArray.push(false)
+                }
+            });
         },
         gridUpdate() {
         // Turns cells "on" or "off" based on their .nextAlive property and then updates the .alive property to reflect current state.
@@ -152,6 +162,11 @@ export default {
         lifeUpdate() {
             // updates cells .alive property based on the rules of the game.
 
+            if (!this.grid.started) {
+                this.gridSnapshot();
+                this.grid.started = true;
+            }
+
             this.grid.array.forEach((cell, i) => {
                 cell.crowd = this.crowdSize(cell, i);
 
@@ -203,17 +218,7 @@ export default {
         }, 
         playPause() {
 
-            if (!this.grid.started) {
-                this.grid.started = true;
-
-                this.grid.startingArray = this.grid.array.slice();
-
-                console.log(this.grid.startingArray);
-                console.log(this.grid.array);
-            }
-
             this.grid.playing = !this.grid.playing;
-            console.log(this.grid.playing)
 
             if (this.grid.playing) {
                 this.lifeUpdate();
@@ -237,13 +242,13 @@ export default {
             }
         },
         resetGrid() {
-            console.log("reset grid");
-            this.grid.array = [];
-            this.grid.array = this.grid.startingArray.slice();
-            console.log(this.grid.startingArray);
-            console.log(this.grid.array);
             this.grid.started = false;
-            // this.gridUpdate();
+
+            this.grid.startingArray.forEach((status, i) => {
+                this.grid.array[i].nextAlive = status;
+            })
+
+            this.gridUpdate();
         },
         speedUpdate(e) {
             this.delay = e;

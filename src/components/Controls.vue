@@ -43,11 +43,9 @@ export default {
   },
   watch: {
     speed(newSpeed, oldSpeed) {
-      // console.log(newSpeed);
       this.$emit("speedUpdate", newSpeed);
     },
     sizeSelection(newSize, oldSize) {
-      console.log(newSize);
       this.$emit("sizeUpdate", newSize);
     }
   }
