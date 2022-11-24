@@ -16,6 +16,7 @@ export default {
                 array: [],
                 playing: false,
                 started: false,
+                firstInit: false,
                 count: 25,
                 startingArray: [],
             },
@@ -31,11 +32,14 @@ export default {
         },
     },
     mounted() {
+        this.gridCreate();
         this.canvas = document.getElementById(this.canvasID);
         this.ctx = this.canvas.getContext('2d');
         this.setCanvasSize();
 
         window.addEventListener("resize", this.setCanvasSize);
+
+        // this.gridInit();
     },
     computed: {
         canvasTop() {
@@ -47,43 +51,75 @@ export default {
             const _canvas = document.getElementById(this.canvasID);
 
             return _canvas.offsetLeft;
+        },
+        numOfCells() {
+            return this.grid.count * this.grid.count;
         }
     },
     methods: {
         setCanvasSize() {
-            this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight-150; //manually compensating for the footer height for now.
-            
-            this.grid.gridSize = this.canvas.width > this.canvas.height ? this.canvas.height : this.canvas.width;
 
-            // Starting coordinates of the grid.
-            this.grid.left = 0 + (this.canvas.width - this.grid.gridSize)/2;
-            this.grid.top = 0 + (this.canvas.height - this.grid.gridSize)/2;
+            requestAnimationFrame(()=> {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight-150; //manually compensating for the footer height for now.
+                
+                this.grid.gridSize = this.canvas.width > this.canvas.height ? this.canvas.height : this.canvas.width;
+    
+                // Starting coordinates of the grid.
+                this.grid.left = 0 + (this.canvas.width - this.grid.gridSize)/2;
+                this.grid.top = 0 + (this.canvas.height - this.grid.gridSize)/2;
 
-            this.gridInit();
+                this.ctx.strokeStyle = "#3d3d29";
+                this.ctx.strokeRect(
+                    this.grid.left,
+                    this.grid.top,
+                    this.grid.gridSize,
+                    this.grid.gridSize
+                );
+                
+                this.gridInit();
+            })
+        },
+        gridCreate() {
+
+            this.grid.array = [];
+
+            for (let i = 0; i < this.numOfCells; i++) {
+                this.grid.array.push({
+                    row: null,
+                    col: null,
+                    top: null,
+                    left: null,
+                    alive: false,
+                    nextAlive: false,
+                    crowd: 0,
+                });
+            }
         },
         gridInit() {
             // Determines the coordinates of each cell in the grid.
-            this.grid.cellSize = this.grid.gridSize / this.grid.count;
-            
-            const numOfCells = this.grid.count*this.grid.count;
 
-            for (let i = 0; i < numOfCells; i++) {
+            this.grid.cellSize = this.grid.gridSize / this.grid.count;
+
+            this.grid.array.forEach((cell, i) => {
                 const _col = Math.floor(i/this.grid.count);
                 const _row = i%this.grid.count;
 
-                this.grid.array.push({
-                    row: _row,
-                    col: _col,
-                    top: this.grid.top + this.grid.cellSize * (_col),
-                    left: this.grid.left + this.grid.cellSize * (_row),
-                    alive: false,
-                    nextAlive: false,
-                    // nextAlive: Math.random() > 0.5 ? true : false,
-                    crowd: 0,
+                cell.row = _row;
+                cell.col = _col;
+                cell.top = this.grid.top + this.grid.cellSize * (_col);
+                cell.left = this.grid.left + this.grid.cellSize * (_row);
 
-                });
-            }
+                if(!this.grid.firstInit) {
+                    cell.nextAlive = Math.random() > 0.5 ? true : false;
+                }
+
+
+            })
+            
+            if (!this.grid.firstInit) {
+                    this.grid.firstInit = true;
+                }
 
             this.gridUpdate();
         },
@@ -102,8 +138,9 @@ export default {
 
             this.grid.array.forEach((cell, i) => {
 
-                this.cellUpdate(cell, i);                
-
+                if (cell.alive != cell.nextAlive || !this.grid.started) {
+                    this.cellUpdate(cell, i);                
+                }
             });
 
             setTimeout(() => { if(this.grid.playing) {this.lifeUpdate()}}, this.delay*1000);
@@ -162,27 +199,30 @@ export default {
         lifeUpdate() {
             // updates cells .alive property based on the rules of the game.
 
-            if (!this.grid.started) {
-                this.gridSnapshot();
-                this.grid.started = true;
-            }
-
-            this.grid.array.forEach((cell, i) => {
-                cell.crowd = this.crowdSize(cell, i);
-
-                if (cell.alive) {
-                    if (cell.crowd < 2 || cell.crowd > 3) {
-                        cell.nextAlive = false;
-                    } else {
-                        cell.nextAlive = true;
-                    }
-                } else {
-                    if (cell.crowd == 3) {
-                        cell.nextAlive = true;
-                    }
+            requestAnimationFrame(() => {
+                if (!this.grid.started) {
+                    this.gridSnapshot();
+                    this.grid.started = true;
                 }
+    
+                this.grid.array.forEach((cell, i) => {
+                    cell.crowd = this.crowdSize(cell, i);
+    
+                    if (cell.alive) {
+                        if (cell.crowd < 2 || cell.crowd > 3) {
+                            cell.nextAlive = false;
+                        } else {
+                            cell.nextAlive = true;
+                        }
+                    } else {
+                        if (cell.crowd == 3) {
+                            cell.nextAlive = true;
+                        }
+                    }
+                });
+
+                this.gridUpdate();
             });
-            requestAnimationFrame(this.gridUpdate);
         },
         crowdSize(cell, idx) {
             let crowdSize = 0;
@@ -255,6 +295,8 @@ export default {
         },
         sizeUpdate(e) {
             this.grid.count = e;
+            this.gridCreate();
+            this.grid.firstInit = false;
             this.gridInit();
         }
     }
