@@ -17,7 +17,7 @@ export default {
                 playing: false,
                 started: false,
                 firstInit: false,
-                count: 25,
+                count: 40,
                 startingArray: [],
             },
         }
@@ -61,8 +61,9 @@ export default {
 
             requestAnimationFrame(()=> {
                 this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight-150; //manually compensating for the footer height for now.
-                
+                // this.canvas.height = window.innerHeight- this.canvasTop; //manually compensating for the footer height for now.
+                this.canvas.height = window.innerHeight - this.canvasTop - 62;
+
                 this.grid.gridSize = this.canvas.width > this.canvas.height ? this.canvas.height : this.canvas.width;
     
                 // Starting coordinates of the grid.
@@ -271,8 +272,8 @@ export default {
             const _col = Math.ceil(clickx / this.grid.cellSize) -1;
             const _row = Math.ceil(clicky / this.grid.cellSize) -1;
 
-            if (_col >= 0 && _col < 25) {
-                if (_row >= 0 && _row < 25) {
+            if (_col >= 0 && _col < this.grid.count) {
+                if (_row >= 0 && _row < this.grid.count) {
                     const _indx = _row*this.grid.count + _col;
         
                     this.grid.array[_indx].nextAlive = !this.grid.array[_indx].nextAlive;

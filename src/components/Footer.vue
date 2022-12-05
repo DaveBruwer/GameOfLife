@@ -1,6 +1,6 @@
 <template>
   <div class="footer container-fluid">
-    <p class="col px-3 align-self-end text-end text-muted fw-lighter fst-italic fs-6">
+    <p class="col px-3 align-self-end text-end text-muted fw-lighter fst-italic fs-6 m-0">
       by Dave Bruwer
     </p>
   </div>

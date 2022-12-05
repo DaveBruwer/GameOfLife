@@ -4,7 +4,7 @@
     <div>
       <CanvasComp canvasID="mainCanvas" />
     </div>
-    <Footer />
+    <Footer id="footer"/>
   </div>
 </template>
 
@@ -23,6 +23,13 @@ export default {
     Header,
     CanvasComp,
     Footer,
+  },
+  computed: {
+    // footerHeight() {
+    //   let footer = document.getElementById("footer");
+    //   console.log(footer);
+    //   return footer.offsetHeight;
+    // }
   }
 }
 </script>
