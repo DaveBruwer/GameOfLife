@@ -137,6 +137,13 @@ export default {
         gridUpdate() {
         // Turns cells "on" or "off" based on their .nextAlive property and then updates the .alive property to reflect current state.
 
+            this.ctx.clearRect(
+                this.grid.left,
+                this.grid.top,
+                this.grid.width,
+                this.grid.height
+            );
+
             this.grid.array.forEach((cell, i) => {
 
                 if (cell.alive != cell.nextAlive || !this.grid.started) {
@@ -149,12 +156,12 @@ export default {
         },
         cellUpdate(cell, i) {
             // Clear all pixels on cell.
-            this.ctx.clearRect(
-                cell.left,
-                cell.top,
-                this.grid.cellSize,
-                this.grid.cellSize
-            );
+            // this.ctx.clearRect(
+            //     cell.left,
+            //     cell.top,
+            //     this.grid.cellSize,
+            //     this.grid.cellSize
+            // );
 
             // Fills the cell colour based on the cell.nextAlive attribute.
             if (cell.nextAlive) {
