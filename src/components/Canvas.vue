@@ -1,6 +1,6 @@
 <template>
     <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
-    <Controls :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @speedUpdate="speedUpdate" @sizeUpdate="sizeUpdate"/>
+    <Controls :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @speedUpdate="speedUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
 </template>
 
 <script>
