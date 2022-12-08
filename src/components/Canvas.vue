@@ -1,6 +1,10 @@
 <template>
-    <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
-    <Controls :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @speedUpdate="speedUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
+    <div align="center">
+        <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
+        <div :style="{width: this.controlsWidth}">
+            <Controls :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @speedUpdate="speedUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -10,6 +14,7 @@ export default {
     data() {
         return {
             canvas: undefined,
+            controlsWidth: "741px",
             ctx: undefined,
             delay: 0.5,
             grid: {
@@ -66,6 +71,9 @@ export default {
 
                 this.grid.gridSize = this.canvas.width > this.canvas.height ? this.canvas.height : this.canvas.width;
     
+                this.controlsWidth = this.grid.gridSize + "px";
+                console.log(this.controlsWidth);
+
                 // Starting coordinates of the grid.
                 this.grid.left = 0 + (this.canvas.width - this.grid.gridSize)/2;
                 this.grid.top = 0 + (this.canvas.height - this.grid.gridSize)/2;
