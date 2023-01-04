@@ -72,7 +72,6 @@ export default {
                 this.grid.gridSize = this.canvas.width > this.canvas.height ? this.canvas.height : this.canvas.width;
     
                 this.controlsWidth = this.grid.gridSize + "px";
-                console.log(this.controlsWidth);
 
                 // Starting coordinates of the grid.
                 this.grid.left = 0 + (this.canvas.width - this.grid.gridSize)/2;

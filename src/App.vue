@@ -4,7 +4,6 @@
     <div>
       <CanvasComp canvasID="mainCanvas" />
     </div>
-    <Footer id="footer"/>
   </div>
 </template>
 
