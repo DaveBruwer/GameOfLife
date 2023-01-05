@@ -4,7 +4,7 @@
       <button @click.prevent="playPauseBtn" class="mx-1 btn btn-outline-dark col btn-sm" v-html="playSVG"></button>
       <button @click.prevent="stepBtn" class="mx-1 btn btn-outline-dark col btn-sm" :disabled="isPlaying" v-html="stepSVG"></button>
       <button class="btn btn-outline-dark col btn-sm mx-1" @click.prevent="resetBtn" :disabled="(isPlaying || !hasStarted)" v-html="resetSVG"></button>
-      <button @click.prevent="() => {randomOn = !randomOn}" class="mx-1 btn col btn-sm" :class="[randomOn ? darkButton : lightButton]" v-html="randomSVG"></button>
+      <button @click.prevent="randomBtn" class="mx-1 btn col btn-sm" :disabled="(isPlaying || hasStarted)" :class="[randomOn ? darkButton : lightButton]" v-html="randomSVG"></button>
       <div class="col-4 text-center">
         <label for="speedRange" class="mx-1" v-html="speedSVG"></label>
         <div class="btn-group mx-1" role="group" aria-label="Basic example">
@@ -57,6 +57,10 @@ export default {
     resetGrid: {
       type: Function,
       required: true
+    },
+    toggleRandom: {
+      type: Function, 
+      required: true
     }
   },
   watch: {
@@ -85,6 +89,10 @@ export default {
     stepBtn() {
       this.hasStarted = true;
       this.lifeUpdate();
+    },
+    randomBtn() {
+      this.randomOn = !this.randomOn;
+      this.toggleRandom();
     }
   }
   

@@ -2,7 +2,7 @@
     <div align="center">
         <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
         <div :style="{width: this.controlsWidth}">
-            <Controls :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @speedUpdate="speedUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
+            <Controls :toggleRandom="toggleRandom" :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @speedUpdate="speedUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
         </div>
     </div>
 </template>
@@ -17,6 +17,7 @@ export default {
             controlsWidth: "741px",
             ctx: undefined,
             delay: 0.5,
+            randomOn: true,
             grid: {
                 array: [],
                 playing: false,
@@ -119,10 +120,10 @@ export default {
                 cell.left = this.grid.left + this.grid.cellSize * (_row);
 
                 if(!this.grid.firstInit) {
-                    cell.nextAlive = Math.random() > 0.5 ? true : false;
+                    if(this.randomOn) {
+                        cell.nextAlive = Math.random() > 0.5 ? true : false;
+                    }
                 }
-
-
             })
             
             if (!this.grid.firstInit) {
@@ -312,6 +313,13 @@ export default {
             this.grid.count = e;
             this.gridCreate();
             this.grid.firstInit = false;
+            this.gridInit();
+        }, 
+        toggleRandom() {
+            this.randomOn = !this.randomOn;
+            this.grid.firstInit = false;
+
+            this.gridCreate();
             this.gridInit();
         }
     }
