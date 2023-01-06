@@ -9,6 +9,8 @@
 
 <script>
 import Controls from "./Controls.vue"
+import { useStateStore } from '../store/stateStore';
+import { mapStores } from 'pinia';
 
 export default {
     data() {
@@ -17,7 +19,7 @@ export default {
             controlsWidth: "741px",
             ctx: undefined,
             delay: 0.5,
-            randomOn: true,
+            // randomOn: true,
             grid: {
                 array: [],
                 playing: false,
@@ -48,6 +50,7 @@ export default {
         // this.gridInit();
     },
     computed: {
+        ...mapStores(useStateStore),
         canvasTop() {
             const _canvas = document.getElementById(this.canvasID);
 
@@ -120,7 +123,7 @@ export default {
                 cell.left = this.grid.left + this.grid.cellSize * (_row);
 
                 if(!this.grid.firstInit) {
-                    if(this.randomOn) {
+                    if(this.stateStore.randomOn) {
                         cell.nextAlive = Math.random() > 0.5 ? true : false;
                     }
                 }
@@ -316,7 +319,7 @@ export default {
             this.gridInit();
         }, 
         toggleRandom() {
-            this.randomOn = !this.randomOn;
+            // this.randomOn = !this.randomOn;
             this.grid.firstInit = false;
 
             this.gridCreate();

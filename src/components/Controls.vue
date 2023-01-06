@@ -4,7 +4,7 @@
       <button @click.prevent="playPauseBtn" class="mx-1 btn btn-outline-dark col btn-sm" v-html="playSVG"></button>
       <button @click.prevent="stepBtn" class="mx-1 btn btn-outline-dark col btn-sm" :disabled="isPlaying" v-html="stepSVG"></button>
       <button class="btn btn-outline-dark col btn-sm mx-1" @click.prevent="resetBtn" :disabled="(isPlaying || !hasStarted)" v-html="resetSVG"></button>
-      <button @click.prevent="randomBtn" class="mx-1 btn col btn-sm" :disabled="(isPlaying || hasStarted)" :class="[randomOn ? darkButton : lightButton]" v-html="randomSVG"></button>
+      <button @click.prevent="randomBtn" class="mx-1 btn col btn-sm" :disabled="(isPlaying || hasStarted)" :class="[ stateStore.randomOn ? darkButton : lightButton]" v-html="randomSVG"></button>
       <div class="col-4 text-center">
         <label for="speedRange" class="mx-1" v-html="speedSVG"></label>
         <div class="btn-group mx-1" role="group" aria-label="Basic example">
@@ -26,6 +26,9 @@
 </template>
 
 <script>
+import { useStateStore } from '../store/stateStore';
+import { mapStores } from 'pinia';
+
 export default {
   data() {
         return {
@@ -33,7 +36,7 @@ export default {
             isPlaying: false,
             hasStarted: false,
             sizeSelection: null,
-            randomOn: true,
+            // randomOn: true,
             lightButton: 'btn-outline-dark',
             darkButton: 'btn-info',
             playSVG: '<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/></svg>',
@@ -91,9 +94,12 @@ export default {
       this.lifeUpdate();
     },
     randomBtn() {
-      this.randomOn = !this.randomOn;
+      this.stateStore.toggleRandom();
       this.toggleRandom();
     }
+  },
+  computed: {
+    ...mapStores(useStateStore),
   }
   
 }
