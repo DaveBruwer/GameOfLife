@@ -8,9 +8,9 @@
       <div class="col-4 text-center">
         <label for="speedRange" class="mx-1" v-html="speedSVG"></label>
         <div class="btn-group mx-1" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {this.speed = 0.25}">0.25 s</button>
-          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {this.speed = 0.5}">0.5 s</button>
-          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {this.speed = 1.0}">1.0 s</button>
+          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {stateStore.updateSpeed(0.25)}">0.25 s</button>
+          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {stateStore.updateSpeed(0.5)}">0.5 s</button>
+          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {stateStore.updateSpeed(1.0)}">1.0 s</button>
         </div>
       </div>
       <div class="col-4 text-center">
@@ -32,11 +32,9 @@ import { mapStores } from 'pinia';
 export default {
   data() {
         return {
-            speed: 0.5,
             isPlaying: false,
             hasStarted: false,
             sizeSelection: null,
-            // randomOn: true,
             lightButton: 'btn-outline-dark',
             darkButton: 'btn-info',
             playSVG: '<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/></svg>',
@@ -67,9 +65,6 @@ export default {
     }
   },
   watch: {
-    speed(newSpeed, oldSpeed) {
-      this.$emit("speedUpdate", newSpeed);
-    },
     sizeSelection(newSize, oldSize) {
       this.$emit("sizeUpdate", newSize);
     }

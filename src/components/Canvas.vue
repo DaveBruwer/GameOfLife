@@ -2,7 +2,7 @@
     <div align="center">
         <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
         <div :style="{width: this.controlsWidth}">
-            <Controls :toggleRandom="toggleRandom" :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @speedUpdate="speedUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
+            <Controls :toggleRandom="toggleRandom" :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
         </div>
     </div>
 </template>
@@ -18,8 +18,6 @@ export default {
             canvas: undefined,
             controlsWidth: "741px",
             ctx: undefined,
-            delay: 0.5,
-            // randomOn: true,
             grid: {
                 array: [],
                 playing: false,
@@ -162,7 +160,7 @@ export default {
                 }
             });
 
-            setTimeout(() => { if(this.grid.playing) {this.lifeUpdate()}}, this.delay*1000);
+            setTimeout(() => { if(this.grid.playing) {this.lifeUpdate()}}, this.stateStore.speed*1000);
 
         },
         cellUpdate(cell, i) {
@@ -245,28 +243,20 @@ export default {
         },
         crowdSize(cell, idx) {
             let crowdSize = 0;
-            // const idx = cell.col + cell.row*this.grid.count;
 
-            // const neighbours = [-26, -25, -24, -1, 1, 24, 25, 26];
             const neighbours = [];
 
             if (cell.row > 0) {neighbours.push(-1)};
-            if (cell.col > 0) {neighbours.push(-25)};
-            if (cell.row > 0 && cell.col > 0) {neighbours.push(-26)};
-            if (cell.row < this.grid.count-1 && cell.col > 0) {neighbours.push(-24)};
+            if (cell.col > 0) {neighbours.push(-this.grid.count)};
+            if (cell.row > 0 && cell.col > 0) {neighbours.push(-(this.grid.count + 1))};
+            if (cell.row < this.grid.count-1 && cell.col > 0) {neighbours.push(-(this.grid.count - 1))};
             if (cell.row < this.grid.count-1) {neighbours.push(1)};
-            if (cell.row > 0 && cell.col < this.grid.count-1) {neighbours.push(24)};
-            if (cell.col < this.grid.count-1) {neighbours.push(25)};
-            if (cell.row < this.grid.count-1 && cell.col < this.grid.count-1) {neighbours.push(26)};
-
-            // console.log(cell.row);
-            // console.log(cell.col);
+            if (cell.row > 0 && cell.col < this.grid.count-1) {neighbours.push(this.grid.count - 1)};
+            if (cell.col < this.grid.count-1) {neighbours.push(this.grid.count)};
+            if (cell.row < this.grid.count-1 && cell.col < this.grid.count-1) {neighbours.push(this.grid.count + 1)};
 
             neighbours.forEach((neighbour) => {
-                // console.log(neighbours);
-                // console.log(neighbour);
                 const thisIdx = idx + neighbour;
-                // console.log(`${idx} : ${thisIdx}`);
                 
                 if (this.grid.array[thisIdx].alive) {
                     crowdSize++;
@@ -308,9 +298,6 @@ export default {
             })
 
             this.gridUpdate();
-        },
-        speedUpdate(e) {
-            this.delay = e;
         },
         sizeUpdate(e) {
             this.grid.count = e;
