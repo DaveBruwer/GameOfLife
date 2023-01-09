@@ -2,7 +2,8 @@
   <div class="container-fluid">
     <Header id="header" />
     <div>
-      <CanvasComp canvasID="mainCanvas" />
+      <RouterView />
+      <!-- <CanvasComp canvasID="mainCanvas" /> -->
     </div>
   </div>
 </template>
