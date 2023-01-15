@@ -6,7 +6,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="container">
-          <a class="navbar-brand" href="#">Game of Life</a><span class="px-2">by</span><a target="_blank" rel="noopener noreferrer" href="https://github.com/davebruwer"> Dave Bruwer</a>
+          <RouterLink class="navbar-brand" to="/">Game of Life</RouterLink><span class="px-2">by</span><a target="_blank" rel="noopener noreferrer" href="https://github.com/davebruwer"> Dave Bruwer</a>
         </div>
       </div>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
