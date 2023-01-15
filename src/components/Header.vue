@@ -20,7 +20,7 @@
           </li>
         </ul>
         <form class="d-flex">
-          <button class="btn btn-outline-success" type="submit">Login</button>
+          <button class="btn btn-outline-success" type="submit"><RouterLink to="/login">Login</RouterLink></button>
         </form>
       </div>
     </div>
