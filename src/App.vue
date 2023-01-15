@@ -3,15 +3,12 @@
     <Header id="header" />
     <div>
       <RouterView />
-      <!-- <CanvasComp canvasID="mainCanvas" /> -->
     </div>
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue"
-import CanvasComp from "./components/Canvas.vue"
-import Footer from "./components/Footer.vue"
 
 export default {
   data() {
@@ -20,16 +17,7 @@ export default {
     }
   },
   components: {
-    Header,
-    CanvasComp,
-    Footer,
-  },
-  computed: {
-    // footerHeight() {
-    //   let footer = document.getElementById("footer");
-    //   console.log(footer);
-    //   return footer.offsetHeight;
-    // }
+    Header
   }
 }
 </script>
