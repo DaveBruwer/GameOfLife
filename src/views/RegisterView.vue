@@ -1,5 +1,5 @@
 <template>
-<form class="container align-middle" id="loginform">
+<form @submit.prevent="registerNewUser" class="container align-middle" id="loginform">
   <div class="m-3">
     <input v-model="v$.displayName.$model" type="text" class="form-control" id="displayName" aria-describedby="dispNameHelp" placeholder="Enter Display Name">
     <div v-if="v$.displayName.$errors.length">
@@ -37,6 +37,8 @@
 
 import { useVuelidate } from "@vuelidate/core"
 import { required, email, minLength, maxLength, sameAs, helpers} from "@vuelidate/validators"
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import firebaseApp from "../firebase"
 
 export default {
   setup () {
@@ -56,6 +58,26 @@ export default {
       registerEmail: {required, email},
       registerPassword: {required, minLength: minLength(6)},
       confirmPassword: {required, sameAs: helpers.withMessage("This field must match the password above.", sameAs(this.registerPassword))}
+    }
+  },
+  methods: {
+    registerNewUser() {
+      console.log("Registering new user.")
+
+      const auth = getAuth(firebaseApp);
+      createUserWithEmailAndPassword(auth, this.registerEmail, this.registerPassword)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage)
+          // ..
+        });
     }
   }
 }
