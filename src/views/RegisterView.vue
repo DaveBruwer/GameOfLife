@@ -50,7 +50,8 @@ export default {
       displayName: "",
       registerEmail: "",
       registerPassword: "",
-      confirmPassword: ""
+      confirmPassword: "",
+      userUID: ""
     }
   },
   validations() {
@@ -71,7 +72,7 @@ export default {
         .then((userCredential) => {
           // Signed in 
           const user = userCredential.user;
-          console.log(user);
+          this.userUID = user.uid
           // ...
         })
         .catch((error) => {
@@ -79,14 +80,14 @@ export default {
           const errorMessage = error.message;
           console.log(errorMessage)
           // ..
-        }).then( (user) => {
+        }).then( () => {
             try {
-              console.log(user)
               const docRef = addDoc(collection(db, "users"), {
-                userID: user.uid,
+                userID: this.userUID,
                 userName: this.displayName
               });
               console.log("Document written");
+              this.$router.push('/')
             } catch (e) {
               console.error("Error adding document: ", e);
             }
