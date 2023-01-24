@@ -37,7 +37,8 @@
 
 import { useVuelidate } from "@vuelidate/core"
 import { required, email, minLength, maxLength, sameAs, helpers} from "@vuelidate/validators"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
+import { getFirestore, collection, addDoc } from "firebase/firestore"
 import firebaseApp from "../firebase"
 
 export default {
@@ -61,11 +62,12 @@ export default {
     }
   },
   methods: {
-    registerNewUser() {
+    async registerNewUser() {
       console.log("Registering new user.")
 
-      const auth = getAuth(firebaseApp);
-      createUserWithEmailAndPassword(auth, this.registerEmail, this.registerPassword)
+      const auth = getAuth(firebaseApp)
+      const db = getFirestore(firebaseApp)
+      await createUserWithEmailAndPassword(auth, this.registerEmail, this.registerPassword)
         .then((userCredential) => {
           // Signed in 
           const user = userCredential.user;
@@ -77,7 +79,19 @@ export default {
           const errorMessage = error.message;
           console.log(errorMessage)
           // ..
-        });
+        }).then( (user) => {
+            try {
+              console.log(user)
+              const docRef = addDoc(collection(db, "users"), {
+                userID: user.uid,
+                userName: this.displayName
+              });
+              console.log("Document written");
+            } catch (e) {
+              console.error("Error adding document: ", e);
+            }
+          }
+        )
     }
   }
 }
