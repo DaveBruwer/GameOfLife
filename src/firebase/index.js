@@ -1,4 +1,8 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app"
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
+import { getFirestore, collection, addDoc } from "firebase/firestore"
+
+
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -13,6 +17,12 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig)
 
-export default firebaseApp
+const auth = getAuth(firebaseApp)
+const db = getFirestore(firebaseApp)
+
+export {
+  auth,
+  db,
+}

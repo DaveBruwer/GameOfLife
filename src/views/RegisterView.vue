@@ -37,9 +37,11 @@
 
 import { useVuelidate } from "@vuelidate/core"
 import { required, email, minLength, maxLength, sameAs, helpers} from "@vuelidate/validators"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { getFirestore, collection, addDoc } from "firebase/firestore"
-import firebaseApp from "../firebase"
+import { auth, db } from "../firebase"
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import { collection, addDoc } from "firebase/firestore"
+import { mapStores } from 'pinia'
+import { useStateStore } from "../store/stateStore"
 
 export default {
   setup () {
@@ -51,8 +53,10 @@ export default {
       registerEmail: "",
       registerPassword: "",
       confirmPassword: "",
-      userUID: ""
     }
+  },
+  computed: {
+    ...mapStores(useStateStore)
   },
   validations() {
     return {
@@ -66,27 +70,22 @@ export default {
     async registerNewUser() {
       console.log("Registering new user.")
 
-      const auth = getAuth(firebaseApp)
-      const db = getFirestore(firebaseApp)
       await createUserWithEmailAndPassword(auth, this.registerEmail, this.registerPassword)
         .then((userCredential) => {
           // Signed in 
-          const user = userCredential.user;
-          this.userUID = user.uid
-          // ...
+          this.userUID = userCredential.user.uid
         })
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorMessage)
-          // ..
+          console.log(error.code + ": " + error.message)
         }).then( () => {
             try {
               const docRef = addDoc(collection(db, "users"), {
                 userID: this.userUID,
                 userName: this.displayName
               });
-              console.log("Document written");
+              this.stateStore.userDisplayName = this.displayName
+              this.stateStore.loggedIn = true
+              console.log("Document written")
               this.$router.push('/')
             } catch (e) {
               console.error("Error adding document: ", e);
