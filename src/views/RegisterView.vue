@@ -92,6 +92,21 @@ export default {
             }
           }
         )
+      // onAuthStateChanged(auth, (user) => {
+      //   if(user) {
+      //     console.log(user)
+      //     addDoc(collection(db, "users"), {
+      //       userID: user.uid,
+      //       userName: this.displayName
+      //     })
+      //     this.stateStore.userDisplayName = this.displayName
+      //     this.stateStore.loggedIn = true
+      //     console.log("Document written")
+      //     this.$router.push('/')
+      //   } else {
+      //     console.log("user is signed out")
+      //   }
+      // })
     }
   }
 }

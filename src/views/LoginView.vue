@@ -1,5 +1,5 @@
 <template>
-<form class="container align-middle" id="loginform">
+<form @submit.prevent="signInUser" class="container align-middle" id="loginform">
   <div class="m-3">
     <input v-model="v$.exampleInputEmail1.$model" name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Email" />
     <div v-if="v$.exampleInputEmail1.$errors.length">
@@ -24,6 +24,11 @@
 
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength } from '@vuelidate/validators'
+import { auth, db } from "../firebase"
+import { collection, getDoc } from "firebase/firestore"
+import { signInWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth'
+import { mapStores } from 'pinia'
+import { useStateStore } from "../store/stateStore"
 
 export default {
   setup () {
@@ -39,6 +44,28 @@ export default {
     return {
       exampleInputEmail1: {required, email},
       exampleInputPassword1: {required, minlength: minLength(6)}
+    }
+  },
+  computed: {
+    ...mapStores(useStateStore)
+  },
+  methods: {
+    async signInUser() {
+      console.log("signing in new user...")
+
+      await signInWithEmailAndPassword(auth, exampleInputEmail1, exampleInputPassword1)
+      .catch((error) => {
+        console.log(error.code + ": " + error.message)
+      })
+
+      onAuthStateChanged(auth, (user) => {
+        if(user) {
+          this.stateStore.loggedIn = true
+          this.$router.push('/')
+        } else {
+          console.log("user is signed out")
+        }
+      })
     }
   }
 }

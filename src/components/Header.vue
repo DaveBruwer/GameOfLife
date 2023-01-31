@@ -20,7 +20,11 @@
           </li>
         </ul>
         <form class="d-flex">
-          <button class="btn btn-outline-success" type="submit"><RouterLink to="/login">Login</RouterLink></button>
+          <div v-if="!stateStore.loggedIn">
+            <button class="btn btn-outline-success m-1" type="button"><RouterLink to="/login">Log in</RouterLink></button>
+            <button class="btn btn-outline-success m-1" type="button"><RouterLink to="/register">Register</RouterLink></button>
+          </div>
+          <button v-else class="btn btn-outline-success" type="button" @click.prevent="logOut">Log out</button>
         </form>
       </div>
     </div>
@@ -28,7 +32,24 @@
 </template>
   
 <script>
+
+import { mapStores } from 'pinia'
+import { useStateStore } from "../store/stateStore"
+import { auth } from '../firebase';
+import { signOut } from '@firebase/auth';
+
 export default {
+
+  computed: {
+    ...mapStores(useStateStore)
+  },
+  methods: {
+    logOut() {
+      signOut(auth)
+      this.stateStore.userDisplayName = ""
+      this.stateStore.loggedIn = false
+    }
+  }
 
 }
 </script>
