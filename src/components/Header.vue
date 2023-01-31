@@ -45,9 +45,11 @@ export default {
   },
   methods: {
     logOut() {
-      signOut(auth)
-      this.stateStore.userDisplayName = ""
-      this.stateStore.loggedIn = false
+      const loggedInUser = auth.currentUser
+      console.log(loggedInUser)
+      // signOut(auth)
+      // this.stateStore.userDisplayName = ""
+      // this.stateStore.loggedIn = false
     }
   }
 
