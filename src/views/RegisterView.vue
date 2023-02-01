@@ -38,7 +38,7 @@
 import { useVuelidate } from "@vuelidate/core"
 import { required, email, minLength, maxLength, sameAs, helpers} from "@vuelidate/validators"
 import { auth, db } from "../firebase"
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { collection, addDoc } from "firebase/firestore"
 import { mapStores } from 'pinia'
 import { useStateStore } from "../store/stateStore"
@@ -70,43 +70,27 @@ export default {
     async registerNewUser() {
       console.log("Registering new user.")
 
+      console.log(this.registerEmail)
+      console.log(this.registerPassword)
+
       await createUserWithEmailAndPassword(auth, this.registerEmail, this.registerPassword)
-        .then((userCredential) => {
-          // Signed in 
-          this.userUID = userCredential.user.uid
-        })
-        .catch((error) => {
-          console.log(error.code + ": " + error.message)
-        }).then( () => {
-            try {
-              const docRef = addDoc(collection(db, "users"), {
-                userID: this.userUID,
-                userName: this.displayName
-              });
-              this.stateStore.userDisplayName = this.displayName
-              this.stateStore.loggedIn = true
-              console.log("Document written")
-              this.$router.push('/')
-            } catch (e) {
-              console.error("Error adding document: ", e);
-            }
-          }
-        )
-      // onAuthStateChanged(auth, (user) => {
-      //   if(user) {
-      //     console.log(user)
-      //     addDoc(collection(db, "users"), {
-      //       userID: user.uid,
-      //       userName: this.displayName
-      //     })
-      //     this.stateStore.userDisplayName = this.displayName
-      //     this.stateStore.loggedIn = true
-      //     console.log("Document written")
-      //     this.$router.push('/')
-      //   } else {
-      //     console.log("user is signed out")
-      //   }
-      // })
+      .then(() => {
+        try {
+          console.log(this.displayName)
+          console.log(this.displayName.value)
+          updateProfile(auth.currentUser, {displayName: this.displayName})
+
+          this.stateStore.userDisplayName = this.displayName
+          this.stateStore.loggedIn = true
+          console.log("Document written")
+          this.$router.push('/')
+        } catch (e) {
+          console.error(e);
+        }
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
     }
   }
 }
