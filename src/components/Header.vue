@@ -21,8 +21,8 @@
         </ul>
         <form class="d-flex">
           <div v-if="isLoggedIn">
-            <span>{{ displayedName }}</span>
-            <button class="btn btn-outline-success" type="button" @click.prevent="logOut">Log out</button>
+            <button class="btn btn-outline-success m-1" type="button"><RouterLink to="/account">{{ displayedName }}</RouterLink></button>
+            <button class="btn btn-outline-success m-1" type="button" @click.prevent="logOut">Log out</button>
           </div>
           <div v-else>
             <button class="btn btn-outline-success m-1" type="button"><RouterLink to="/login">Log in</RouterLink></button>
@@ -39,35 +39,36 @@
 import { mapStores } from 'pinia'
 import { useStateStore } from "../store/stateStore"
 import { auth } from '../firebase';
-import { signOut } from '@firebase/auth';
+import { signOut, onAuthStateChanged } from '@firebase/auth';
 
 export default {
   data() {
     return {
-      displayedName: "Guest"
+      displayedName: "Guest",
+      isLoggedIn: false
     }
+  },
+  created() {
+    onAuthStateChanged(auth, (user) => {
+      if(user) {
+        this.stateStore.loggedIn = true
+        this.displayedName = user.displayName
+        this.isLoggedIn = true
+      } else {
+        this.stateStore.loggedIn = false
+        this.displayedName = ""
+        this.isLoggedIn = false
+      }
+    })
   },
   computed: {
     ...mapStores(useStateStore),
-    isLoggedIn() {
-      if(auth.currentUser) {
-        console.log(auth)
-        this.stateStore.loggedIn = true
-        this.displayedName = auth.currentUser.displayName
-        return true
-      } else {
-        this.stateStore.loggedIn = false
-        this.displayedName = "Guest"
-        return false
-      }
-    }
   },
   methods: {
     logOut() {
       console.log("Logging out...")
       try {
         signOut(auth)
-        this.stateStore.userDisplayName = ""
         this.stateStore.loggedIn = false
         console.log("Logged out.")
       } catch (error) {
