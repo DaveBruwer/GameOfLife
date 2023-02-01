@@ -70,23 +70,13 @@ export default {
     async registerNewUser() {
       console.log("Registering new user.")
 
-      console.log(this.registerEmail)
-      console.log(this.registerPassword)
-
       await createUserWithEmailAndPassword(auth, this.registerEmail, this.registerPassword)
-      .then(() => {
-        try {
-          console.log(this.displayName)
-          console.log(this.displayName.value)
-          updateProfile(auth.currentUser, {displayName: this.displayName})
+      .then(async () => {
+        await updateProfile(auth.currentUser, {displayName: this.displayName})
 
-          this.stateStore.userDisplayName = this.displayName
-          this.stateStore.loggedIn = true
-          console.log("Document written")
-          this.$router.push('/')
-        } catch (e) {
-          console.error(e);
-        }
+        this.stateStore.userDisplayName = this.displayName
+        this.stateStore.loggedIn = true
+        this.$router.push('/')
       })
       .catch((error) => {
         console.log(error.message)

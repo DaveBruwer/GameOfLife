@@ -54,18 +54,12 @@ export default {
       console.log("signing in new user...")
 
       await signInWithEmailAndPassword(auth, exampleInputEmail1.value, exampleInputPassword1.value)
-      .catch((error) => {
-        console.log(error.code + ": " + error.message)
+      .then(() => {
+        this.stateStore.loggedIn = true
+        this.$router.push("/")
       })
-
-      onAuthStateChanged(auth, (user) => {
-        console.log("onAuthStateChanged called!")
-        if(user) {
-          this.stateStore.loggedIn = true
-          this.$router.push('/')
-        } else {
-          console.log("user is signed out")
-        }
+      .catch((error) => {
+        console.log(error.message)
       })
     }
   }
