@@ -5,7 +5,7 @@ import { collection, addDoc } from "firebase/firestore"
 
 export const useStateStore = defineStore('state', {
   state: () => ({
-    random: true,
+    random: false,
     speed: 0.5,
     userDisplayName: "",
     loggedIn: false,

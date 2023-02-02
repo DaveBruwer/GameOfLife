@@ -1,14 +1,15 @@
 <template>
   <div align="center">
-      <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
-      <div :style="{width: this.controlsWidth}">
-          <Controls :toggleRandom="toggleRandom" :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
-      </div>
+    <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
+    <div :style="{width: this.controlsWidth}">
+        <Controls :saveGrid="saveGrid" :toggleRandom="toggleRandom" :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
+    </div>
   </div>
 </template>
 
 <script>
 import Controls from "../components/Controls.vue"
+import saveModal from "../modals/saveModal.vue"
 import { useStateStore } from '../store/stateStore';
 import { mapStores } from 'pinia';
 
@@ -31,6 +32,7 @@ export default {
   },
   components: {
       Controls,
+      saveModal,
   },
   mounted() {
       this.gridCreate();
@@ -159,55 +161,37 @@ export default {
 
       },
       cellUpdate(cell, i) {
-          // Clear all pixels on cell.
-          // this.ctx.clearRect(
-          //     cell.left,
-          //     cell.top,
-          //     this.grid.cellSize,
-          //     this.grid.cellSize
-          // );
+            // Fills the cell colour based on the cell.nextAlive attribute.
+            if (cell.nextAlive) {
+                this.ctx.fillStyle = "#adad85";
+                this.ctx.fillRect(
+                    cell.left,
+                    cell.top,
+                    this.grid.cellSize,
+                    this.grid.cellSize
+                );
+            } else {
+                this.ctx.fillStyle = "#f5f5f0";
+                this.ctx.fillRect(
+                    cell.left,
+                    cell.top,
+                    this.grid.cellSize,
+                    this.grid.cellSize
+                );
+            }
 
-          // Fills the cell colour based on the cell.nextAlive attribute.
-          if (cell.nextAlive) {
-              this.ctx.fillStyle = "#adad85";
-              this.ctx.fillRect(
-                  cell.left,
-                  cell.top,
-                  this.grid.cellSize,
-                  this.grid.cellSize
-              );
-          } else {
-              this.ctx.fillStyle = "#f5f5f0";
-              this.ctx.fillRect(
-                  cell.left,
-                  cell.top,
-                  this.grid.cellSize,
-                  this.grid.cellSize
-              );
-          }
+            // Updates the cell.alive property to match updated state.
+            cell.alive = cell.nextAlive;
 
-          // Updates the cell.alive property to match updated state.
-          cell.alive = cell.nextAlive;
-
-          // draw the borders of the cell to prevent fading borders.
-          this.ctx.strokeStyle = "#3d3d29";
-          this.ctx.strokeRect(
-              cell.left,
-              cell.top,
-              this.grid.cellSize,
-              this.grid.cellSize
-          );
-          
-          // if (cell.alive) {
-          //     this.ctx.strokeText("a", cell.left + 7, cell.top+15);
-          // } else {
-          //     this.ctx.strokeText("", cell.left + 7, cell.top+15);
-          // }
-
-          // this.ctx.strokeText(cell.crowd, cell.left + 7, cell.top+15);
-          // this.ctx.strokeText(i, cell.left + 3, cell.top+22);
-          // this.ctx.strokeText(`${cell.row}/${cell.col}`, cell.left + 1, cell.top+10);
-      },
+            // draw the borders of the cell to prevent fading borders.
+            this.ctx.strokeStyle = "#3d3d29";
+            this.ctx.strokeRect(
+                cell.left,
+                cell.top,
+                this.grid.cellSize,
+                this.grid.cellSize
+            );
+        },
       lifeUpdate() {
           // updates cells .alive property based on the rules of the game.
 
@@ -306,6 +290,9 @@ export default {
 
           this.gridCreate();
           this.gridInit();
+      },
+      saveGrid(gridName) {
+        console.log(gridName)
       }
   }
 }
