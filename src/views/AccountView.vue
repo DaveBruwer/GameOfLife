@@ -1,13 +1,13 @@
 <template>
-    <h1>Temporary account placeholder...</h1>
-  </template>
+  <h5>Account page placeholder</h5>
+</template>
   
-  <script>
+<script>
   export default {
     
   }
-  </script>
+</script>
+
+<style>
   
-  <style>
-    
-  </style>
+</style>

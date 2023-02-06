@@ -51,16 +51,23 @@ export default {
   },
   methods: {
     async signInUser() {
-      console.log("signing in new user...")
+      const isFormCorrect = await this.v$.$validate()
 
-      await signInWithEmailAndPassword(auth, exampleInputEmail1.value, exampleInputPassword1.value)
-      .then(() => {
-        this.stateStore.loggedIn = true
-        this.$router.push("/")
-      })
-      .catch((error) => {
-        console.log(error.message)
-      })
+      if (isFormCorrect) {
+        console.log("signing in new user...")
+  
+        await signInWithEmailAndPassword(auth, exampleInputEmail1.value, exampleInputPassword1.value)
+        .then(() => {
+          this.stateStore.loggedIn = true
+          this.$router.push("/")
+        })
+        .catch((error) => {
+          console.log(error.message)
+          alert(error.message)
+        })
+      } else {
+        alert("Invalid form data.")
+      }
     }
   }
 }

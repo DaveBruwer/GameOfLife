@@ -21,12 +21,12 @@
         </ul>
         <form class="d-flex">
           <div v-if="isLoggedIn">
-            <button class="btn btn-outline-success m-1" type="button"><RouterLink to="/account">{{ displayedName }}</RouterLink></button>
-            <button class="btn btn-outline-success m-1" type="button" @click.prevent="logOut">Log out</button>
+            <RouterLink class="btn btn-outline-dark m-1" to="/account">{{ displayedName }}</RouterLink>
+            <button class="btn btn-outline-dark m-1" type="button" @click.prevent="logOut">Log out</button>
           </div>
           <div v-else>
-            <button class="btn btn-outline-success m-1" type="button"><RouterLink to="/login">Log in</RouterLink></button>
-            <button class="btn btn-outline-success m-1" type="button"><RouterLink to="/register">Register</RouterLink></button>
+            <RouterLink class="btn btn-outline-dark m-1" to="/login">Log in</RouterLink>
+            <RouterLink class="btn btn-outline-dark m-1" to="/register">Register</RouterLink>
           </div>
         </form>
       </div>

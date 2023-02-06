@@ -9,7 +9,6 @@
 
 <script>
 import Controls from "../components/Controls.vue"
-import saveModal from "../modals/saveModal.vue"
 import { useStateStore } from '../store/stateStore';
 import { mapStores } from 'pinia';
 
@@ -32,7 +31,6 @@ export default {
   },
   components: {
       Controls,
-      saveModal,
   },
   mounted() {
       this.gridCreate();

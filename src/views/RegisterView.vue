@@ -68,19 +68,25 @@ export default {
   },
   methods: {
     async registerNewUser() {
-      console.log("Registering new user.")
+      const isFormCorrect = await this.v$.$validate()
 
-      await createUserWithEmailAndPassword(auth, this.registerEmail, this.registerPassword)
-      .then(async () => {
-        await updateProfile(auth.currentUser, {displayName: this.displayName})
+      if (isFormCorrect) {
+        console.log("Registering new user.")
 
-        this.stateStore.userDisplayName = this.displayName
-        this.stateStore.loggedIn = true
-        this.$router.push('/')
-      })
-      .catch((error) => {
-        console.log(error.message)
-      })
+        await createUserWithEmailAndPassword(auth, this.registerEmail, this.registerPassword)
+        .then(async () => {
+          await updateProfile(auth.currentUser, {displayName: this.displayName})
+
+          this.stateStore.userDisplayName = this.displayName
+          this.stateStore.loggedIn = true
+          this.$router.push('/')
+        })
+        .catch((error) => {
+          console.log(error.message)
+        })
+      } else {
+        alert("Invalid form data.")
+      }
     }
   }
 }
