@@ -9,6 +9,8 @@ export const useStateStore = defineStore('state', {
     speed: 0.5,
     userDisplayName: "",
     loggedIn: false,
+    count: 40,
+    startingArray: [],
   }),
   getters: {
     randomOn(state) {

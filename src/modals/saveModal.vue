@@ -29,8 +29,6 @@
 <script>
   import { useVuelidate } from '@vuelidate/core'
   import { required, minLength } from '@vuelidate/validators'
-  // import * as bootstrap from "bootstrap"
-  // import { Modal } from 'bootstrap'
 
   export default {
     setup () {

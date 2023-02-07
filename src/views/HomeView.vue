@@ -24,8 +24,6 @@ export default {
           playing: false,
           started: false,
           firstInit: false,
-          count: 40,
-          startingArray: [],
       },
     }
   },
@@ -40,7 +38,6 @@ export default {
 
       window.addEventListener("resize", this.setCanvasSize);
 
-      // this.gridInit();
   },
   computed: {
       ...mapStores(useStateStore),
@@ -55,7 +52,7 @@ export default {
           return _canvas.offsetLeft;
       },
       numOfCells() {
-          return this.grid.count * this.grid.count;
+          return this.stateStore.count * this.stateStore.count;
       }
   },
   methods: {
@@ -104,11 +101,11 @@ export default {
       gridInit() {
           // Determines the coordinates of each cell in the grid.
 
-          this.grid.cellSize = this.grid.gridSize / this.grid.count;
+          this.grid.cellSize = this.grid.gridSize / this.stateStore.count;
 
           this.grid.array.forEach((cell, i) => {
-              const _col = Math.floor(i/this.grid.count);
-              const _row = i%this.grid.count;
+              const _col = Math.floor(i/this.stateStore.count);
+              const _row = i%this.stateStore.count;
 
               cell.row = _row;
               cell.col = _col;
@@ -129,12 +126,12 @@ export default {
           this.gridUpdate();
       },
       gridSnapshot() {
-          this.grid.startingArray = [];
+          this.stateStore.startingArray = [];
           this.grid.array.forEach((cell) => {
               if (cell.nextAlive == true) {
-                  this.grid.startingArray.push(true)
+                  this.stateStore.startingArray.push(true)
               } else {
-                  this.grid.startingArray.push(false)
+                  this.stateStore.startingArray.push(false)
               }
           });
       },
@@ -224,13 +221,13 @@ export default {
           const neighbours = [];
 
           if (cell.row > 0) {neighbours.push(-1)};
-          if (cell.col > 0) {neighbours.push(-this.grid.count)};
-          if (cell.row > 0 && cell.col > 0) {neighbours.push(-(this.grid.count + 1))};
-          if (cell.row < this.grid.count-1 && cell.col > 0) {neighbours.push(-(this.grid.count - 1))};
-          if (cell.row < this.grid.count-1) {neighbours.push(1)};
-          if (cell.row > 0 && cell.col < this.grid.count-1) {neighbours.push(this.grid.count - 1)};
-          if (cell.col < this.grid.count-1) {neighbours.push(this.grid.count)};
-          if (cell.row < this.grid.count-1 && cell.col < this.grid.count-1) {neighbours.push(this.grid.count + 1)};
+          if (cell.col > 0) {neighbours.push(-this.stateStore.count)};
+          if (cell.row > 0 && cell.col > 0) {neighbours.push(-(this.stateStore.count + 1))};
+          if (cell.row < this.stateStore.count-1 && cell.col > 0) {neighbours.push(-(this.stateStore.count - 1))};
+          if (cell.row < this.stateStore.count-1) {neighbours.push(1)};
+          if (cell.row > 0 && cell.col < this.stateStore.count-1) {neighbours.push(this.stateStore.count - 1)};
+          if (cell.col < this.stateStore.count-1) {neighbours.push(this.stateStore.count)};
+          if (cell.row < this.stateStore.count-1 && cell.col < this.stateStore.count-1) {neighbours.push(this.stateStore.count + 1)};
 
           neighbours.forEach((neighbour) => {
               const thisIdx = idx + neighbour;
@@ -257,9 +254,9 @@ export default {
           const _col = Math.ceil(clickx / this.grid.cellSize) -1;
           const _row = Math.ceil(clicky / this.grid.cellSize) -1;
 
-          if (_col >= 0 && _col < this.grid.count) {
-              if (_row >= 0 && _row < this.grid.count) {
-                  const _indx = _row*this.grid.count + _col;
+          if (_col >= 0 && _col < this.stateStore.count) {
+              if (_row >= 0 && _row < this.stateStore.count) {
+                  const _indx = _row*this.stateStore.count + _col;
       
                   this.grid.array[_indx].nextAlive = !this.grid.array[_indx].nextAlive;
       
@@ -270,14 +267,14 @@ export default {
       resetGrid() {
           this.grid.started = false;
 
-          this.grid.startingArray.forEach((status, i) => {
+          this.stateStore.startingArray.forEach((status, i) => {
               this.grid.array[i].nextAlive = status;
           })
 
           this.gridUpdate();
       },
       sizeUpdate(e) {
-          this.grid.count = e;
+          this.stateStore.count = e;
           this.gridCreate();
           this.grid.firstInit = false;
           this.gridInit();
