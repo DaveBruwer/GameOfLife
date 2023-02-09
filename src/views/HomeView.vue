@@ -83,34 +83,35 @@ export default {
           })
       },
       gridCreate() {
-            if(this.stateStore.startingArray.length > 0) {
-                console.log("restoring grid state")
-                this.stateStore.startingArray.forEach((cell) => {
-                    this.grid.array.push(cell)
-                })
-            } else {
-                console.log("creating new grid")
-                this.grid.array = [];
-                
-                for (let i = 0; i < this.numOfCells; i++) {
+        let _nextAlive = false
 
-                    if(this.stateStore.randomOn) {
-                        const _nextAlive = Math.random() > 0.5 ? true : false
-                    } else {
-                        const _nextAlive = false
-                    }
-                    
-                    this.grid.array.push({
-                        row: i%this.stateStore.count,
-                        col: Math.floor(i/this.stateStore.count),
-                        top: null,
-                        left: null,
-                        alive: false,
-                        nextAlive: false,
-                        crowd: 0,
-                    });
+        if(this.stateStore.startingArray.length > 0) {
+            console.log("restoring grid state")
+            this.stateStore.startingArray.forEach((cell) => {
+                this.grid.array.push(cell)
+            })
+        } else {
+            console.log("creating new grid")
+            console.log("random grid: " + this.stateStore.random)
+            this.grid.array = [];
+            
+            for (let i = 0; i < this.numOfCells; i++) {
+
+                if(this.stateStore.randomOn) {
+                    _nextAlive = Math.random() > 0.5 ? true : false
                 }
+                
+                this.grid.array.push({
+                    row: i%this.stateStore.count,
+                    col: Math.floor(i/this.stateStore.count),
+                    top: null,
+                    left: null,
+                    alive: false,
+                    nextAlive: _nextAlive,
+                    crowd: 0,
+                });
             }
+        }
       },
       gridInit() {
           // Determines the coordinates of each cell in the grid.
@@ -118,11 +119,6 @@ export default {
           this.grid.cellSize = this.grid.gridSize / this.stateStore.count;
 
           this.grid.array.forEach((cell, i) => {
-              //   const _col = Math.floor(i/this.stateStore.count);
-              //   const _row = i%this.stateStore.count;
-              
-              //   cell.row = _row;
-              //   cell.col = _col;
               cell.top = this.grid.top + this.grid.cellSize * (cell.col);
               cell.left = this.grid.left + this.grid.cellSize * (cell.row);
           })
@@ -134,6 +130,7 @@ export default {
           this.gridUpdate();
       },
       gridSnapshot() {
+        console.log("grid snapshot")
           this.stateStore.startingArray = [];
           this.grid.array.forEach((cell) => {
               this.stateStore.startingArray.push(cell)
@@ -193,7 +190,7 @@ export default {
         },
       lifeUpdate() {
           // updates cells .alive property based on the rules of the game.
-
+        console.log(this.grid.started)
           requestAnimationFrame(() => {
               if (!this.grid.started) {
                   this.gridSnapshot();
@@ -244,6 +241,9 @@ export default {
           return crowdSize;
       }, 
       playPause() {
+        if(!this.grid.started) {
+            this.grid.started = true
+        }
 
           this.grid.playing = !this.grid.playing;
 
@@ -271,8 +271,10 @@ export default {
       resetGrid() {
           this.grid.started = false;
 
-          this.stateStore.startingArray.forEach((status, i) => {
-              this.grid.array[i].nextAlive = status;
+          this.grid.array = []
+
+          this.stateStore.startingArray.forEach((cell) => {
+              this.grid.array.push(cell)
           })
 
           this.gridUpdate();
@@ -284,8 +286,8 @@ export default {
           this.gridInit();
       }, 
       toggleRandom() {
-          // this.randomOn = !this.randomOn;
           this.grid.firstInit = false;
+          this.stateStore.startingArray = []
 
           this.gridCreate();
           this.gridInit();
