@@ -1,6 +1,6 @@
 <template>
   <!-- Button trigger modal -->
-  <button @click.prevent="() => {showModal = !showModal}" type="button" class="mx-1 btn col btn-sm" v-html="saveSVG">
+  <button title="Save Grid" @click.prevent="() => {showModal = !showModal}" type="button" class="mx-1 btn col btn-sm" v-html="saveSVG">
   </button>
 
   <!-- Modal -->                      

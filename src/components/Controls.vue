@@ -1,13 +1,12 @@
 <template>
   <div class="container-fluid">
     <div class="row justify-content-center mx-2">
-      <button @click.prevent="playPauseBtn" class="mx-1 btn btn-outline-dark col btn-sm" v-html="playSVG"></button>
-      <button @click.prevent="stepBtn" class="mx-1 btn btn-outline-dark col btn-sm" :disabled="isPlaying" v-html="stepSVG"></button>
-      <button class="btn btn-outline-dark col btn-sm mx-1" @click.prevent="resetBtn" :disabled="(isPlaying || !hasStarted)" v-html="resetSVG"></button>
-      <button @click.prevent="randomBtn" class="mx-1 btn col btn-sm" :disabled="(isPlaying || hasStarted)" :class="[ stateStore.randomOn ? darkButton : lightButton]" v-html="randomSVG"></button>
-      <!-- <button @click.prevent="saveBtn" class="mx-1 btn col btn-sm" :disabled="(isPlaying || hasStarted)" v-html="saveSVG"></button> -->
+      <button :title="[isPlaying ? 'Pause' : 'Play']" @click.prevent="playPauseBtn" class="mx-1 btn btn-outline-dark col btn-sm" v-html="playSVG"></button>
+      <button title="Step" @click.prevent="stepBtn" class="mx-1 btn btn-outline-dark col btn-sm" :disabled="isPlaying" v-html="stepSVG"></button>
+      <button title="Reset Grid" class="btn btn-outline-dark col btn-sm mx-1" @click.prevent="resetBtn" :disabled="(isPlaying || !hasStarted)" v-html="resetSVG"></button>
+      <button title="Toggle Random Grid" @click.prevent="randomBtn" class="mx-1 btn col btn-sm" :disabled="(isPlaying || hasStarted)" :class="[ stateStore.randomOn ? darkButton : lightButton]" v-html="randomSVG"></button>
       <saveModal />
-      <div class="col-4 text-center">
+      <div title="Playback Speed" class="col-4 text-center">
         <label for="speedRange" class="mx-1" v-html="speedSVG"></label>
         <div class="btn-group mx-1" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {stateStore.updateSpeed(0.2)}">0.2 s</button>
@@ -15,7 +14,7 @@
           <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {stateStore.updateSpeed(1.0)}">1.0 s</button>
         </div>
       </div>
-      <div class="col-3 text-center">
+      <div title="Grid Size" class="col-3 text-center">
         <label for="sizeSelection" class="mx-1" v-html="sizeSVG"></label>
         <div class="btn-group mx-1" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {this.sizeSelection = 20}">20</button>
