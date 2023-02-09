@@ -1,6 +1,6 @@
 <template>
   <!-- Button trigger modal -->
-  <button title="Save Grid" @click.prevent="() => {showModal = !showModal}" type="button" class="mx-1 btn col btn-sm" v-html="saveSVG">
+  <button title="Save Grid" @click.prevent="saveBtn" type="button" class="mx-1 btn col btn-sm" v-html="saveSVG">
   </button>
 
   <!-- Modal -->                      
@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button @click.prevent="() => {showModal = false}" type="button" class="btn btn-outline-dark" >Close</button>
+          <button @click.prevent="() => {showModal = false}" type="button" class="btn btn-outline-dark" >Cancel</button>
           <button type="submit" class="btn btn-outline-dark">Save</button>
         </div>
       </div>
@@ -29,6 +29,8 @@
 <script>
   import { useVuelidate } from '@vuelidate/core'
   import { required, minLength } from '@vuelidate/validators'
+  import { useStateStore } from '../store/stateStore';
+  import { mapStores } from 'pinia';
 
   export default {
     setup () {
@@ -41,12 +43,27 @@
         showModal: false
       }
     },
+  props: {
+    saveGrid: {
+      type: Function, 
+      required: true
+    }
+  },
     validations() {
       return {
         saveName: {required, minlength: minLength(3)}
       }
     },
     methods: {
+      saveBtn() {
+        this.saveGrid()
+        if(this.stateStore.loggedIn) {
+          this.showModal = true
+        } else {
+          this.$router.push("/login")
+        }
+
+      },
       async submitModal() {
         const isFormCorrect = await this.v$.$validate()
 
@@ -57,6 +74,9 @@
           alert("Invalid form data.")
         }
       }
+    }, 
+    computed: {
+      ...mapStores(useStateStore),
     }
   }
 </script>

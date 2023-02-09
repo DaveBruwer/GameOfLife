@@ -83,20 +83,34 @@ export default {
           })
       },
       gridCreate() {
+            if(this.stateStore.startingArray.length > 0) {
+                console.log("restoring grid state")
+                this.stateStore.startingArray.forEach((cell) => {
+                    this.grid.array.push(cell)
+                })
+            } else {
+                console.log("creating new grid")
+                this.grid.array = [];
+                
+                for (let i = 0; i < this.numOfCells; i++) {
 
-          this.grid.array = [];
-
-          for (let i = 0; i < this.numOfCells; i++) {
-              this.grid.array.push({
-                  row: null,
-                  col: null,
-                  top: null,
-                  left: null,
-                  alive: false,
-                  nextAlive: false,
-                  crowd: 0,
-              });
-          }
+                    if(this.stateStore.randomOn) {
+                        const _nextAlive = Math.random() > 0.5 ? true : false
+                    } else {
+                        const _nextAlive = false
+                    }
+                    
+                    this.grid.array.push({
+                        row: i%this.stateStore.count,
+                        col: Math.floor(i/this.stateStore.count),
+                        top: null,
+                        left: null,
+                        alive: false,
+                        nextAlive: false,
+                        crowd: 0,
+                    });
+                }
+            }
       },
       gridInit() {
           // Determines the coordinates of each cell in the grid.
@@ -104,21 +118,15 @@ export default {
           this.grid.cellSize = this.grid.gridSize / this.stateStore.count;
 
           this.grid.array.forEach((cell, i) => {
-              const _col = Math.floor(i/this.stateStore.count);
-              const _row = i%this.stateStore.count;
-
-              cell.row = _row;
-              cell.col = _col;
-              cell.top = this.grid.top + this.grid.cellSize * (_col);
-              cell.left = this.grid.left + this.grid.cellSize * (_row);
-
-              if(!this.grid.firstInit) {
-                  if(this.stateStore.randomOn) {
-                      cell.nextAlive = Math.random() > 0.5 ? true : false;
-                  }
-              }
+              //   const _col = Math.floor(i/this.stateStore.count);
+              //   const _row = i%this.stateStore.count;
+              
+              //   cell.row = _row;
+              //   cell.col = _col;
+              cell.top = this.grid.top + this.grid.cellSize * (cell.col);
+              cell.left = this.grid.left + this.grid.cellSize * (cell.row);
           })
-          
+
           if (!this.grid.firstInit) {
                   this.grid.firstInit = true;
               }
@@ -128,11 +136,7 @@ export default {
       gridSnapshot() {
           this.stateStore.startingArray = [];
           this.grid.array.forEach((cell) => {
-              if (cell.nextAlive == true) {
-                  this.stateStore.startingArray.push(true)
-              } else {
-                  this.stateStore.startingArray.push(false)
-              }
+              this.stateStore.startingArray.push(cell)
           });
       },
       gridUpdate() {
@@ -287,7 +291,9 @@ export default {
           this.gridInit();
       },
       saveGrid(gridName) {
-        console.log(gridName)
+        console.log("Saving grid state...")
+        this.gridSnapshot()
+        console.log("Grid state saved.")
       }
   }
 }

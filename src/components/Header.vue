@@ -20,6 +20,7 @@
           </li>
         </ul>
         <form class="d-flex">
+          <button lass="btn btn-outline-dark m-1" @click.prevent="btnPress">Btn</button>
           <div v-if="isLoggedIn">
             <RouterLink class="btn btn-outline-dark m-1" to="/account">{{ displayedName }}</RouterLink>
             <button class="btn btn-outline-dark m-1" type="button" @click.prevent="logOut">Log out</button>
@@ -74,6 +75,10 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    btnPress() {
+      console.log(this.stateStore.startingArray)
+      console.log(this.stateStore.count)
     }
   }
 
