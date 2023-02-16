@@ -86,10 +86,7 @@ export default {
         let _nextAlive = false
 
         if(this.stateStore.startingArray.length > 0) {
-            console.log("restoring grid state")
-            this.stateStore.startingArray.forEach((cell) => {
-                this.grid.array.push(cell)
-            })
+            this.gridRestore()
         } else {
             console.log("creating new grid")
             console.log("random grid: " + this.stateStore.random)
@@ -131,10 +128,14 @@ export default {
       },
       gridSnapshot() {
         console.log("grid snapshot")
-          this.stateStore.startingArray = [];
-          this.grid.array.forEach((cell) => {
-              this.stateStore.startingArray.push(cell)
-          });
+        this.stateStore.startingArray = JSON.stringify(this.grid.array)
+        //   this.grid.array.forEach((cell) => {
+        //       this.stateStore.startingArray.push(cell)
+        //   });
+      },
+      gridRestore() {
+        console.log("restoring grid")
+        this.grid.array = JSON.parse(this.stateStore.startingArray)
       },
       gridUpdate() {
       // Turns cells "on" or "off" based on their .nextAlive property and then updates the .alive property to reflect current state.
@@ -192,10 +193,10 @@ export default {
           // updates cells .alive property based on the rules of the game.
         console.log(this.grid.started)
           requestAnimationFrame(() => {
-              if (!this.grid.started) {
-                  this.gridSnapshot();
-                  this.grid.started = true;
-              }
+            //   if (!this.grid.started) {
+            //       this.gridSnapshot();
+            //       this.grid.started = true;
+            //   }
   
               this.grid.array.forEach((cell, i) => {
                   cell.crowd = this.crowdSize(cell, i);
@@ -242,6 +243,7 @@ export default {
       }, 
       playPause() {
         if(!this.grid.started) {
+            this.gridSnapshot()
             this.grid.started = true
         }
 
@@ -269,13 +271,9 @@ export default {
           }
       },
       resetGrid() {
-          this.grid.started = false;
+            this.grid.started = false;
 
-          this.grid.array = []
-
-          this.stateStore.startingArray.forEach((cell) => {
-              this.grid.array.push(cell)
-          })
+            this.gridRestore()
 
           this.gridUpdate();
       },
