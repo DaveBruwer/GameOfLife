@@ -191,12 +191,7 @@ export default {
         },
       lifeUpdate() {
           // updates cells .alive property based on the rules of the game.
-        console.log(this.grid.started)
           requestAnimationFrame(() => {
-            //   if (!this.grid.started) {
-            //       this.gridSnapshot();
-            //       this.grid.started = true;
-            //   }
   
               this.grid.array.forEach((cell, i) => {
                   cell.crowd = this.crowdSize(cell, i);

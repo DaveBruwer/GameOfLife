@@ -9,17 +9,17 @@
       <div title="Playback Speed" class="col-4 text-center">
         <label for="speedRange" class="mx-1" v-html="speedSVG"></label>
         <div class="btn-group mx-1" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {stateStore.updateSpeed(0.2)}">0.2 s</button>
-          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {stateStore.updateSpeed(0.5)}">0.5 s</button>
-          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {stateStore.updateSpeed(1.0)}">1.0 s</button>
+          <button type="button" class="btn btn-sm" :class="[ stateStore.speed == 0.2 ? darkButton : lightButton ]" @click.prevent="() => {stateStore.updateSpeed(0.2)}">0.2 s</button>
+          <button type="button" class="btn btn-sm" :class="[ stateStore.speed == 0.5 ? darkButton : lightButton ]" @click.prevent="() => {stateStore.updateSpeed(0.5)}">0.5 s</button>
+          <button type="button" class="btn btn-sm" :class="[ stateStore.speed == 1.0 ? darkButton : lightButton ]" @click.prevent="() => {stateStore.updateSpeed(1.0)}">1.0 s</button>
         </div>
       </div>
       <div title="Grid Size" class="col-3 text-center">
         <label for="sizeSelection" class="mx-1" v-html="sizeSVG"></label>
         <div class="btn-group mx-1" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {this.sizeSelection = 20}">20</button>
-          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {this.sizeSelection = 40}">40</button>
-          <button type="button" class="btn btn-outline-dark btn-sm" @click.prevent="() => {this.sizeSelection = 60}">60</button>
+          <button type="button" class="btn btn-sm" :class="[ stateStore.count == 20 ? darkButton : lightButton ]" @click.prevent="() => {this.sizeSelection = 20}">20</button>
+          <button type="button" class="btn btn-sm" :class="[ stateStore.count == 40 ? darkButton : lightButton ]" @click.prevent="() => {this.sizeSelection = 40}">40</button>
+          <button type="button" class="btn btn-sm" :class="[ stateStore.count == 60 ? darkButton : lightButton ]" @click.prevent="() => {this.sizeSelection = 60}">60</button>
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@ export default {
             hasStarted: false,
             sizeSelection: null,
             lightButton: 'btn-outline-dark',
-            darkButton: 'btn-info',
+            darkButton: 'btn-dark',
             playSVG: '<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/></svg>',
             stepSVG: '<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="currentColor" class="bi bi-skip-end-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038L9.5 7.028V5.5a.5.5 0 0 1 1 0v5a.5.5 0 0 1-1 0V8.972l-2.71 1.935A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/></svg>',
             stopSVG: '<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="currentColor" class="bi bi-stop-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z"/></svg>',
