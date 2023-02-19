@@ -5,6 +5,8 @@ import { collection, addDoc } from "firebase/firestore"
 
 export const useStateStore = defineStore('state', {
   state: () => ({
+    imgSrc: '',
+    isPlaying: false,
     random: true,
     speed: 0.5,
     userDisplayName: "Guest",

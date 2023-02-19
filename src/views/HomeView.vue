@@ -2,7 +2,7 @@
   <div align="center">
     <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
     <div :style="{width: this.controlsWidth}">
-        <Controls :saveGrid="saveGrid" :toggleRandom="toggleRandom" :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
+        <Controls :createPNG="createPNG" :gridSnapshot="gridSnapshot" :toggleRandom="toggleRandom" :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
     </div>
   </div>
 </template>
@@ -15,6 +15,8 @@ import { mapStores } from 'pinia';
 export default {
   data() {
     return {
+        displayImg: false,
+        imgSrc: '',
       canvasID: "mainCanvas",
       canvas: undefined,
       controlsWidth: "741px",
@@ -129,9 +131,6 @@ export default {
       gridSnapshot() {
         console.log("grid snapshot")
         this.stateStore.startingArray = JSON.stringify(this.grid.array)
-        //   this.grid.array.forEach((cell) => {
-        //       this.stateStore.startingArray.push(cell)
-        //   });
       },
       gridRestore() {
         console.log("restoring grid")
@@ -285,10 +284,8 @@ export default {
           this.gridCreate();
           this.gridInit();
       },
-      saveGrid(gridName) {
-        console.log("Saving grid state...")
-        this.gridSnapshot()
-        console.log("Grid state saved.")
+      createPNG() {
+        this.stateStore.imgSrc = this.canvas.toDataURL('image/png')
       }
   }
 }
@@ -296,5 +293,6 @@ export default {
 </script>
 
 <style>
+
 
 </style>

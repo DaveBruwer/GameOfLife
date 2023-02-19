@@ -5,7 +5,7 @@
       <button title="Step" @click.prevent="stepBtn" class="mx-1 btn btn-outline-dark col btn-sm" :disabled="isPlaying" v-html="stepSVG"></button>
       <button title="Reset Grid" class="btn btn-outline-dark col btn-sm mx-1" @click.prevent="resetBtn" :disabled="(isPlaying || !hasStarted)" v-html="resetSVG"></button>
       <button title="Toggle Random Grid" @click.prevent="randomBtn" class="mx-1 btn col btn-sm" :disabled="(isPlaying || hasStarted)" :class="[ stateStore.randomOn ? darkButton : lightButton]" v-html="randomSVG"></button>
-      <saveModal :saveGrid="saveGrid" />
+      <saveModal :createPNG="createPNG" :gridSnapshot="gridSnapshot" />
       <div title="Playback Speed" class="col-4 text-center">
         <label for="speedRange" class="mx-1" v-html="speedSVG"></label>
         <div class="btn-group mx-1" role="group" aria-label="Basic example">
@@ -69,7 +69,11 @@ export default {
       type: Function, 
       required: true
     },
-    saveGrid: {
+    gridSnapshot: {
+      type: Function, 
+      required: true
+    },
+    createPNG: {
       type: Function, 
       required: true
     }
@@ -83,6 +87,7 @@ export default {
     playPauseBtn() {
       this.hasStarted = true
       this.isPlaying = !this.isPlaying
+      this.stateStore.isPlaying = this.isPlaying
       if (this.isPlaying) {
         this.playSVG = '<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="currentColor" class="bi bi-pause-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"/></svg>'
       } else {
@@ -101,9 +106,6 @@ export default {
     randomBtn() {
       this.stateStore.toggleRandom();
       this.toggleRandom();
-    },
-    saveBtn() {
-      this.saveGrid("Grid Name 1");
     }
   },
   computed: {

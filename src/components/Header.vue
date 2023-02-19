@@ -20,7 +20,7 @@
         </ul>
         <form class="d-flex">
           <!-- <button lass="btn btn-outline-dark m-1" @click.prevent="btnPress">Btn</button> -->
-          <div v-if="isLoggedIn">
+          <div v-if="stateStore.loggedIn">
             <RouterLink class="btn btn-outline-dark m-1" to="/account">Account</RouterLink>
             <button class="btn btn-outline-dark m-1" type="button" @click.prevent="logOut">Log out</button>
           </div>
@@ -45,15 +45,14 @@ export default {
   data() {
     return {
       displayedName: "Guest",
-      isLoggedIn: false
     }
   },
   created() {
     onAuthStateChanged(auth, (user) => {
       if(user) {
-        this.isLoggedIn = true
+        this.stateStore.loggedIn = true
       } else {
-        this.isLoggedIn = false
+        this.stateStore.loggedIn = false
       }
     })
   },

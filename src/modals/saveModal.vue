@@ -1,6 +1,6 @@
 <template>
   <!-- Button trigger modal -->
-  <button title="Save Grid" @click.prevent="saveBtn" type="button" class="mx-1 btn col btn-sm" v-html="saveSVG">
+  <button :disabled="stateStore.isPlaying" title="Save Grid" @click.prevent="saveBtn" type="button" class="mx-1 btn col btn-outline-dark btn-sm" v-html="saveSVG">
   </button>
 
   <!-- Modal -->                      
@@ -12,6 +12,7 @@
           <button @click.prevent="() => {showModal = false}" type="button" class="btn-close" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <img class="gridimg m-1 border border-dark" :src="stateStore.imgSrc" >
           <input type="text" v-model="v$.saveName.$model" placeholder="Name">
           <div v-if="v$.saveName.$errors.length">
             <div class="text-danger" v-for="error of v$.saveName.$errors" :key="error.$uid">{{ error.$message }}</div>
@@ -44,7 +45,11 @@
       }
     },
   props: {
-    saveGrid: {
+    gridSnapshot: {
+      type: Function, 
+      required: true
+    },
+    createPNG: {
       type: Function, 
       required: true
     }
@@ -56,7 +61,10 @@
     },
     methods: {
       saveBtn() {
-        this.saveGrid()
+        this.gridSnapshot()
+
+        this.createPNG()
+
         if(this.stateStore.loggedIn) {
           this.showModal = true
         } else {
@@ -82,5 +90,9 @@
 </script>
 
 <style>
-  
+  .gridimg{
+    width:300px;
+    height:300px;
+    object-fit:cover;
+  }
 </style>
