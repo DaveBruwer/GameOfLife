@@ -76,13 +76,13 @@ export default {
         await createUserWithEmailAndPassword(auth, this.registerEmail, this.registerPassword)
         .then(async () => {
           await updateProfile(auth.currentUser, {displayName: this.displayName})
-
+        }).then( () => {
           this.stateStore.userDisplayName = this.displayName
           this.stateStore.loggedIn = true
           this.$router.push('/')
-        })
-        .catch((error) => {
+        }).catch((error) => {
           console.log(error.message)
+          window.alert(error.message)
         })
       } else {
         alert("Invalid form data.")

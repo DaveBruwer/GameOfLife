@@ -7,7 +7,7 @@ export const useStateStore = defineStore('state', {
   state: () => ({
     random: true,
     speed: 0.5,
-    userDisplayName: "",
+    userDisplayName: "Guest",
     loggedIn: false,
     count: 40,
     startingArray: [],

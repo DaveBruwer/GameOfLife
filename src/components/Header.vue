@@ -13,16 +13,15 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <RouterLink class="nav-link" aria-current="page" to="/">Home</RouterLink>
-            <!-- <a class="nav-link" aria-current="page" href="#">Home</a> -->
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" to="/gallery">Gallery</RouterLink>
           </li>
         </ul>
         <form class="d-flex">
-          <button lass="btn btn-outline-dark m-1" @click.prevent="btnPress">Btn</button>
+          <!-- <button lass="btn btn-outline-dark m-1" @click.prevent="btnPress">Btn</button> -->
           <div v-if="isLoggedIn">
-            <RouterLink class="btn btn-outline-dark m-1" to="/account">{{ displayedName }}</RouterLink>
+            <RouterLink class="btn btn-outline-dark m-1" to="/account">Account</RouterLink>
             <button class="btn btn-outline-dark m-1" type="button" @click.prevent="logOut">Log out</button>
           </div>
           <div v-else>
@@ -52,33 +51,30 @@ export default {
   created() {
     onAuthStateChanged(auth, (user) => {
       if(user) {
-        this.stateStore.loggedIn = true
-        this.displayedName = user.displayName
         this.isLoggedIn = true
       } else {
-        this.stateStore.loggedIn = false
-        this.displayedName = ""
         this.isLoggedIn = false
       }
     })
   },
   computed: {
     ...mapStores(useStateStore),
+
   },
   methods: {
-    logOut() {
+    async logOut() {
       console.log("Logging out...")
       try {
-        signOut(auth)
-        this.stateStore.loggedIn = false
+        await signOut(auth)
         console.log("Logged out.")
       } catch (error) {
         console.log(error)
+        window.alert(error)
       }
     },
     btnPress() {
-      console.log(this.stateStore.startingArray)
-      console.log(this.stateStore.count)
+      console.log(this.isLoggedIn)
+      console.log(this.displayedName)      
     }
   }
 

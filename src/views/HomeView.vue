@@ -88,8 +88,8 @@ export default {
         if(this.stateStore.startingArray.length > 0) {
             this.gridRestore()
         } else {
-            console.log("creating new grid")
-            console.log("random grid: " + this.stateStore.random)
+            // console.log("creating new grid")
+            // console.log("random grid: " + this.stateStore.random)
             this.grid.array = [];
             
             for (let i = 0; i < this.numOfCells; i++) {
