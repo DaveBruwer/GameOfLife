@@ -32,6 +32,8 @@
   import { required, minLength } from '@vuelidate/validators'
   import { useStateStore } from '../store/stateStore';
   import { mapStores } from 'pinia';
+  import {auth, db } from "../firebase"
+  import { collection, addDoc } from '@firebase/firestore';
 
   export default {
     setup () {
@@ -65,6 +67,8 @@
 
         this.createPNG()
 
+        // console.log(this.stateStore.startingArray)
+
         if(this.stateStore.loggedIn) {
           this.showModal = true
         } else {
@@ -76,8 +80,19 @@
         const isFormCorrect = await this.v$.$validate()
 
         if (isFormCorrect) {
-          this.showModal = false
-          console.log(this.saveName)
+          await addDoc(collection(db, "grids"), {
+            name: this.saveName,
+            count: this.stateStore.count,
+            image: this.stateStore.imgSrc,
+            uid: auth.currentUser.uid,
+            grid: this.stateStore.startingArray
+          }).then(() => {
+            this.showModal = false
+            console.log("grid save successful")
+          }).catch((error) => {
+            console.log(error.message)
+            alert(error.message)
+          })
         } else {
           alert("Invalid form data.")
         }
