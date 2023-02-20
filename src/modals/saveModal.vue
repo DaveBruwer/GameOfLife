@@ -85,7 +85,8 @@
             count: this.stateStore.count,
             image: this.stateStore.imgSrc,
             uid: auth.currentUser.uid,
-            grid: this.stateStore.startingArray
+            grid: this.stateStore.startingArray,
+            likes: []
           }).then(() => {
             this.showModal = false
             console.log("grid save successful")

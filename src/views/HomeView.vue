@@ -97,7 +97,7 @@ export default {
             for (let i = 0; i < this.numOfCells; i++) {
 
                 if(this.stateStore.randomOn) {
-                    _nextAlive = Math.random() > 0.5 ? true : false
+                    _nextAlive = Math.random() > 0.7 ? true : false
                 }
                 
                 this.grid.array.push({
