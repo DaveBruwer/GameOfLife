@@ -39,7 +39,7 @@ import { useVuelidate } from "@vuelidate/core"
 import { required, email, minLength, maxLength, sameAs, helpers} from "@vuelidate/validators"
 import { auth, db } from "../firebase"
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
-import { collection, addDoc } from "firebase/firestore"
+import { doc, setDoc } from "firebase/firestore"
 import { mapStores } from 'pinia'
 import { useStateStore } from "../store/stateStore"
 
@@ -76,6 +76,10 @@ export default {
         await createUserWithEmailAndPassword(auth, this.registerEmail, this.registerPassword)
         .then(async () => {
           await updateProfile(auth.currentUser, {displayName: this.displayName})
+        }).then(async () => {
+          await setDoc(doc(db, "users", auth.currentUser.uid), {
+            name: this.displayName
+          })
         }).then( () => {
           this.stateStore.userDisplayName = this.displayName
           this.stateStore.loggedIn = true

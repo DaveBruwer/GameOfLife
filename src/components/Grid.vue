@@ -3,7 +3,7 @@
     <img :src="grid.image" class="card-img-top" :alt="grid.name">
     <div class="card-body">
       <h5 class="card-title">{{grid.name}}</h5>
-      <p class="card-text">by: {{ grid.uid }}</p>
+      <p class="card-text">by: {{ grid.userName }}</p>
       <button @click="buttonPress" class="btn btn-primary">Button</button>
     </div>
   </div>

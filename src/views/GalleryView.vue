@@ -10,7 +10,7 @@
 <script>
   import Grid from "../components/Grid.vue"
   import {auth, db } from "../firebase"
-  import { collection, getDocs } from '@firebase/firestore';
+  import { collection, getDocs, doc, getDoc } from '@firebase/firestore';
 
   export default {
     data() {
@@ -22,11 +22,20 @@
       Grid,
     },
     async beforeMount() {
-      const querySnapshot = await getDocs(collection(db, "grids"))
-
-      querySnapshot.forEach((doc) => {
-        this.grids.push({...doc.data(), id: doc.id})
+      await getDocs(collection(db, "grids"))
+      .then((querySnapshot) => {
+        querySnapshot.forEach(async (docSnap) => {
+          await getDoc(doc(db, "users", docSnap.data().uid))
+          .then((user) => {
+            this.grids.push({...docSnap.data(), id: docSnap.id, userName: user.data().name})
+          })
+        })
+        // console.log(this.grids)
+      }).catch((error) => {
+        console.log(error.message)
+        window.alert(error.message)
       })
+
     }
     
 }
