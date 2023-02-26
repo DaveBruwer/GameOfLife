@@ -1,5 +1,6 @@
 <template>
   <h1>This is the gallery view!</h1>
+  <button @click="btnSort">Sort</button>
   <div class="container-fluid">
     <div calss="row">
       <Grid class="col-3" v-for="grid in grids" :grid="grid"/>
@@ -9,7 +10,7 @@
 
 <script>
   import Grid from "../components/Grid.vue"
-  import {auth, db } from "../firebase"
+  import { db } from "../firebase"
   import { collection, getDocs, doc, getDoc } from '@firebase/firestore';
 
   export default {
@@ -30,12 +31,23 @@
             this.grids.push({...docSnap.data(), id: docSnap.id, userName: user.data().name})
           })
         })
-        // console.log(this.grids)
       }).catch((error) => {
         console.log(error.message)
         window.alert(error.message)
       })
 
+      this.grids.sort((a, b) => {return b.likes.length - a.likes.length})
+
+    },
+    mounted() {
+      this.grids.sort((a, b) => {return b.likes.length - a.likes.length})
+      console.log(this.grids)
+    },
+    methods: {
+      btnSort() {
+        this.grids.sort((a, b) => {return b.likes.length - a.likes.length})
+        console.log(this.grids)
+      }
     }
     
 }

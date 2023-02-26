@@ -83,6 +83,7 @@
           await addDoc(collection(db, "grids"), {
             name: this.saveName,
             count: this.stateStore.count,
+            random: this.stateStore.random,
             image: this.stateStore.imgSrc,
             uid: auth.currentUser.uid,
             grid: this.stateStore.startingArray,

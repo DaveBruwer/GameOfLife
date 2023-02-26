@@ -36,6 +36,7 @@
 
         this.stateStore.count = this.grid.count
         this.stateStore.startingArray = this.grid.grid
+        this.stateStore.random = this.grid.random
 
         this.$router.push('/')
       },
