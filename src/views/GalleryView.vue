@@ -22,6 +22,7 @@
     components: {
       Grid,
     },
+    // VUE LIFECYCLE HOOK
     async beforeMount() {
       await getDocs(collection(db, "grids"))
       .then((querySnapshot) => {
@@ -31,21 +32,25 @@
             this.grids.push({...docSnap.data(), id: docSnap.id, userName: user.data().name})
           })
         })
+      }).then(() => {
+        this.grids.sort((a, b) => {return b.likes.length - a.likes.length}) // DOES NOT WORK
       }).catch((error) => {
         console.log(error.message)
         window.alert(error.message)
       })
 
-      this.grids.sort((a, b) => {return b.likes.length - a.likes.length})
+      this.grids.sort((a, b) => {return b.likes.length - a.likes.length}) // DOES NOT WORK
 
     },
+    // VUE LIFECYCLE HOOK
     mounted() {
       this.grids.sort((a, b) => {return b.likes.length - a.likes.length})
       console.log(this.grids)
     },
     methods: {
+      // FUNCTION THAT GETS CALLED WHEN BUTTON PRESSED.
       btnSort() {
-        this.grids.sort((a, b) => {return b.likes.length - a.likes.length})
+        this.grids.sort((a, b) => {return b.likes.length - a.likes.length}) // THIS WORKS FINE
         console.log(this.grids)
       }
     }
