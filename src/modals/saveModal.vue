@@ -33,7 +33,7 @@
   import { useStateStore } from '../store/stateStore';
   import { mapStores } from 'pinia';
   import {auth, db } from "../firebase"
-  import { collection, addDoc } from '@firebase/firestore';
+  import { collection, addDoc, Timestamp } from '@firebase/firestore';
 
   export default {
     setup () {
@@ -87,7 +87,8 @@
             image: this.stateStore.imgSrc,
             uid: auth.currentUser.uid,
             grid: this.stateStore.startingArray,
-            likes: []
+            likes: [],
+            creationDate: Timestamp.now()
           }).then(() => {
             this.showModal = false
             console.log("grid save successful")
