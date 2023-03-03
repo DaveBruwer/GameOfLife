@@ -5,9 +5,9 @@
       <h5 class="card-title">{{grid.name}}</h5>
       <div class="row">
         <p class="card-text">by: {{ grid.userName }}</p>
-        <div>{{ grid.likes.length }} <button class="btn btn-light" @click="likeBtn" v-html="likeSVG" :disabled="!stateStore.loggedIn"></button></div>
+        <p class="card-text">Created: {{ grid.creationDate.toDate().toDateString() }}</p>
+        <div><button @click="loadBtn" class="btn btn-outline-dark me-4" v-html="fullscreenSVG"></button><span>{{ grid.likes.length }} </span><button class="btn btn-light" @click="likeBtn" v-html="likeSVG" :disabled="!stateStore.loggedIn"></button></div>
       </div>
-      <button @click="loadBtn" class="btn btn-outline-dark" v-html="fullscreenSVG"></button>
     </div>
   </div>
 </template>
