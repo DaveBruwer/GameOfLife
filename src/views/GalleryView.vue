@@ -1,17 +1,15 @@
 <template>
   <h1>Gallery</h1>
-  <form >
-    <label for="sort">Sort by: </label>
-    <select name="sort" id="sort" v-model="sortStrat">
+  <form class="form m-2" >
+    <label for="sort" class="form-label">Sort by: </label>
+    <select class="btn btn-outline-dark mx-1" name="sort" id="sort" v-model="sortStrat">
       <option value="likes">likes</option>
       <option value="latest">latest</option>
     </select>
-    <button @click.prevent="sort">Go</button>
+    <button class="btn btn-outline-dark mx-1" @click.prevent="sort">Go</button>
   </form>
-  <div class="container-fluid">
-    <div calss="row">
-      <Grid class="col-3" v-for="grid in grids" :grid="grid"/>
-    </div>
+  <div class="flexcontainer text-center">
+    <Grid v-for="grid in grids" :grid="grid"/>
   </div>
 </template>
 
@@ -76,5 +74,13 @@
 </script>
 
 <style>
+.flexcontainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+}
+
+
   
 </style>

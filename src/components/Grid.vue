@@ -1,9 +1,9 @@
 <template>
-  <div class="card container-fluid" style="width: 18rem;">
-    <img :src="grid.image" class="card-img-top" :alt="grid.name">
+  <div class="flexitem card col m-1">
+    <img :src="grid.image" class="card-img-top" :alt="grid.name" >
     <div class="card-body">
       <h5 class="card-title">{{grid.name}}</h5>
-      <div class="row">
+      <div class="">
         <p class="card-text">by: {{ grid.userName }}</p>
         <p class="card-text">Created: {{ grid.creationDate.toDate().toDateString() }}</p>
         <div><button @click="loadBtn" class="btn btn-outline-dark me-4" v-html="fullscreenSVG"></button><span>{{ grid.likes.length }} </span><button class="btn btn-light" @click="likeBtn" v-html="likeSVG" :disabled="!stateStore.loggedIn"></button></div>
@@ -73,5 +73,9 @@
 </script>
 
 <style>
+.flexitem {
+  min-width: 16em;
+  max-width: 16em;
+}
   
 </style>
