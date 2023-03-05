@@ -59,6 +59,7 @@
         const _query = await getDocs(collection(db, "grids"))
         for(let i = 0; i< _query.size; i++) {
           const docSnap = _query.docs[i].data()
+          docSnap.id = _query.docs[i].id
           await this.pushToGrid(docSnap)
         }
         this.sort()

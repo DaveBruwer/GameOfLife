@@ -42,12 +42,13 @@
       },
       async likeBtn() {
         if(auth.currentUser) {
-          if(this.grid.likes.includes(auth.currentUser.uid)) {
-            this.grid.likes.splice(this.grid.likes.indexOf(auth.currentUser.uid), 1)
+          const currentUserID = auth.currentUser.uid
+          if(this.grid.likes.includes(currentUserID)) {
+            this.grid.likes.splice(this.grid.likes.indexOf(currentUserID), 1)
           } else {
-            this.grid.likes.push(auth.currentUser.uid)
+            this.grid.likes.push(currentUserID)
           }
-          
+
           await updateDoc(doc(db, "grids", this.grid.id), {
             likes: this.grid.likes
           }).then(() => {
