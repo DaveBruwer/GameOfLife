@@ -1,5 +1,8 @@
 <template>
   <h1>Gallery</h1>
+  <div id="loadingModal" tabindex="-1"  :style="[showLoadingModal ? { 'display': 'block' } : { 'display': 'none' }]">
+    <h1 id="loadingContent">. . . loading . . .</h1>
+  </div>
   <form class="form m-2" >
     <label for="sort" class="form-label">Sort by: </label>
     <select class="btn btn-outline-dark mx-1" name="sort" id="sort" v-model="sortStrat">
@@ -22,7 +25,8 @@
     data() {
       return {
         grids: [],
-        sortStrat: "likes"
+        sortStrat: "likes",
+        showLoadingModal: false
       }
     },
     components: {
@@ -52,10 +56,8 @@
         }
 
       },
-      logGrid() {
-        console.log(this.grids)
-      },
       async loadGrids() {
+        this.showLoadingModal = true
         const _query = await getDocs(collection(db, "grids"))
         for(let i = 0; i< _query.size; i++) {
           const docSnap = _query.docs[i].data()
@@ -63,6 +65,7 @@
           await this.pushToGrid(docSnap)
         }
         this.sort()
+        this.showLoadingModal = false
 
       },
       async pushToGrid(docSnap) {
@@ -80,6 +83,26 @@
   flex-wrap: wrap;
   justify-content: center;
 
+}
+
+#loadingModal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+#loadingContent {
+  align-items: center;
+  text-align: center;
+  margin: auto;
+  background-color: lightgrey;
+  opacity: 0.4;
+  margin: 1em;
+  padding: 50% 0;
 }
 
 

@@ -1,12 +1,12 @@
 <template>
   <div class="flexitem card col m-1">
-    <img :src="grid.image" class="card-img-top" :alt="grid.name" >
+    <img :title="grid.name" :src="grid.image" class="thumbnail card-img-top" :alt="grid.name" >
     <div class="card-body">
       <h5 class="card-title">{{grid.name}}</h5>
       <div class="">
         <p class="card-text">by: {{ grid.userName }}</p>
         <p class="card-text">Created: {{ grid.creationDate.toDate().toDateString() }}</p>
-        <div><button @click="loadBtn" class="btn btn-outline-dark me-4" v-html="fullscreenSVG"></button><span>{{ grid.likes.length }} </span><button class="btn btn-light" @click="likeBtn" v-html="likeSVG" :disabled="!stateStore.loggedIn"></button></div>
+        <div><button title="Load" @click="loadBtn" class="btn btn-outline-dark me-4" v-html="fullscreenSVG"></button><span>{{ grid.likes.length }} </span><button class="btn btn-light" @click="likeBtn" v-html="likeSVG" :disabled="!stateStore.loggedIn"></button></div>
       </div>
     </div>
   </div>
@@ -78,5 +78,6 @@
   min-width: 16em;
   max-width: 16em;
 }
+
   
 </style>
