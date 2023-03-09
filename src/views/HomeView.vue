@@ -60,29 +60,34 @@ export default {
   methods: {
       setCanvasSize() {
 
-          requestAnimationFrame(()=> {
-              this.canvas.width = window.innerWidth;
-              // this.canvas.height = window.innerHeight- this.canvasTop; //manually compensating for the footer height for now.
-              this.canvas.height = window.innerHeight - this.canvasTop - 62;
+          const _width = window.innerWidth
+          const _height = window.innerHeight - this.canvasTop - 62
 
-              this.grid.gridSize = this.canvas.width > this.canvas.height ? this.canvas.height : this.canvas.width;
-  
-              this.controlsWidth = this.grid.gridSize + "px";
+          if(_width < _height) {
+            this.canvas.width = _width
+            this.canvas.height = _width
+          } else {
+            this.canvas.width = _height
+            this.canvas.height = _height
+          }
 
-              // Starting coordinates of the grid.
-              this.grid.left = 0 + (this.canvas.width - this.grid.gridSize)/2;
-              this.grid.top = 0 + (this.canvas.height - this.grid.gridSize)/2;
+          this.grid.gridSize = this.canvas.width > this.canvas.height ? this.canvas.height : this.canvas.width;
 
-              this.ctx.strokeStyle = "#3d3d29";
-              this.ctx.strokeRect(
-                  this.grid.left,
-                  this.grid.top,
-                  this.grid.gridSize,
-                  this.grid.gridSize
-              );
-              
-              this.gridInit();
-          })
+          this.controlsWidth = this.grid.gridSize + "px";
+
+          // Starting coordinates of the grid.
+          this.grid.left = 0
+          this.grid.top = 0
+
+          this.ctx.strokeStyle = "#3d3d29";
+          this.ctx.strokeRect(
+              this.grid.left,
+              this.grid.top,
+              this.grid.gridSize,
+              this.grid.gridSize
+          );
+          
+          this.gridInit();
       },
       gridCreate() {
         let _nextAlive = false
