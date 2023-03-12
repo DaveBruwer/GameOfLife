@@ -1,13 +1,14 @@
 <template>
-  <div class="flexitem card col m-1">
-    <img :title="grid.name" :src="grid.image" class="thumbnail card-img-top" :alt="grid.name" >
-    <div class="card-body">
-      <h5 class="card-title">{{grid.name}}</h5>
-      <div class="">
-        <p class="card-text">by: {{ grid.userName }}</p>
-        <p class="card-text">Created: {{ grid.creationDate.toDate().toDateString() }}</p>
-        <div><button title="Load" @click="loadBtn" class="btn btn-outline-dark me-4" v-html="fullscreenSVG"></button><span>{{ grid.likes.length }} </span><button class="btn btn-light" @click="likeBtn" v-html="likeSVG" :disabled="!stateStore.loggedIn"></button></div>
-      </div>
+  <div class=" flexitem card m-1">
+    <button class="" @click.prevent="loadBtn">
+      <img :title="grid.name" :src="grid.image" class="thumbnail card-img-top" :alt="grid.name" >
+    </button>
+    <h5 class="">{{grid.name}}</h5>
+    <p class="">by: {{ grid.userName }}</p>
+    <p class="">Created: {{ grid.creationDate.toDate().toDateString() }}</p>
+    <div class="likes">
+      <span>{{ grid.likes.length }} </span>
+      <button title="like" class="btn btn-light" @click="likeBtn" v-html="likeSVG" :disabled="!stateStore.loggedIn"></button>
     </div>
   </div>
 </template>
@@ -77,6 +78,17 @@
 .flexitem {
   min-width: 16em;
   max-width: 16em;
+  display: flex;
+  align-items: flex-start;
+  align-content: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+.likes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row;
 }
 
   
