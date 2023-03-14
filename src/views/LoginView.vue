@@ -13,8 +13,9 @@
       <div class="text-danger" v-for="error of v$.exampleInputPassword1.$errors" :key="error.$uid">{{ error.$message }}</div>
     </div>
   </div>
-  <div class="m-3">
+  <div class="link-container m-3">
     <RouterLink to="/register">Register</RouterLink>
+    <a href="#" @click.prevent="forgotPassword">Forgot Password</a>
   </div>
   <button type="submit" class="btn btn-primary m-3">Submit</button>
 </form>
@@ -24,9 +25,8 @@
 
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength } from '@vuelidate/validators'
-import { auth, db } from "../firebase"
-import { collection, getDoc } from "firebase/firestore"
-import { signInWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth'
+import { auth } from "../firebase"
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from '@firebase/auth'
 import { mapStores } from 'pinia'
 import { useStateStore } from "../store/stateStore"
 
@@ -68,6 +68,15 @@ export default {
       } else {
         alert("Invalid form data.")
       }
+    },
+    async forgotPassword() {
+      sendPasswordResetEmail(auth, exampleInputEmail1.value)
+        .then(() => {
+          alert("An email has been sent with instructions to reset your password.")
+        })
+        .catch((error) => {
+          alert(error.message)
+      })
     }
   }
 }
@@ -77,5 +86,9 @@ export default {
   #loginform {
     max-width: 25em;
     min-width: 15em;
+  }
+  .link-container {
+    display: flex;
+    justify-content: space-between;
   }
 </style>
