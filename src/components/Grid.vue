@@ -4,11 +4,13 @@
       <img :title="grid.name" :src="grid.image" class="thumbnail card-img-top" :alt="grid.name" >
     </button>
     <h5 class="">{{grid.name}}</h5>
-    <p class="">by: {{ grid.userName }}</p>
-    <p class="">Created: {{ grid.creationDate.toDate().toDateString() }}</p>
+    <!-- <p class="">Created: {{ grid.creationDate.toDate().toDateString() }}</p> -->
     <div class="likes">
-      <span>{{ grid.likes.length }} </span>
-      <button title="like" class="btn btn-light" @click="likeBtn" v-html="likeSVG" :disabled="!stateStore.loggedIn"></button>
+      <p class="paragraph">by: {{ grid.userName }}</p>
+      <p class="paragraph">
+        <span>{{ grid.likes.length }} </span>
+        <button title="like" class="btn btn-light" @click="likeBtn" v-html="likeSVG" :disabled="!stateStore.loggedIn"></button>
+      </p>
     </div>
   </div>
 </template>
@@ -87,8 +89,13 @@
 .likes {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   flex-direction: row;
+  width: 100%;
+}
+
+.paragraph {
+  margin: 0;
 }
 
   
