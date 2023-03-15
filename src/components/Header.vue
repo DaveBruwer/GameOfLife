@@ -6,13 +6,13 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="container">
-          <RouterLink class="navbar-brand" to="/">Game of Life</RouterLink><span class="px-2">by</span><a target="_blank" rel="noopener noreferrer" href="https://github.com/davebruwer"> Dave Bruwer</a>
+          <RouterLink class="navbar-brand" to="/">Game of Life</RouterLink><span class="author">by</span><a class="author" target="_blank" rel="noopener noreferrer" href="https://github.com/davebruwer"> Dave Bruwer</a>
         </div>
       </div>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse px-2" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <RouterLink class="nav-link" aria-current="page" to="/">Home</RouterLink>
+            <RouterLink class="nav-link" aria-current="page" to="/about">About</RouterLink>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" to="/gallery">Gallery</RouterLink>
@@ -81,7 +81,9 @@ export default {
 </script>
 
 <style>
-
+.author {
+  font-size: 0.75em;
+}
 
 
 </style>

@@ -5,6 +5,7 @@ const GalleryView = () => import("../views/GalleryView.vue")
 const LoginView = () => import("../views/LoginView.vue")
 const RegisterView = () => import("../views/RegisterView.vue")
 const AccountView = () => import("../views/AccountView.vue")
+const AboutView = () => import("../views/AboutView.vue")
 
 const router = createRouter({
   history: createWebHistory(),
@@ -33,6 +34,11 @@ const router = createRouter({
       path: '/account',
       name: 'account',
       component: AccountView
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: AboutView
     }
   ]
 })
