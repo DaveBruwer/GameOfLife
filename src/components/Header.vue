@@ -19,9 +19,8 @@
           </li>
         </ul>
         <form class="d-flex">
-          <!-- <button lass="btn btn-outline-dark m-1" @click.prevent="btnPress">Btn</button> -->
           <div v-if="stateStore.loggedIn">
-            <RouterLink class="btn btn-outline-dark m-1" to="/account">Account</RouterLink>
+            <button class="btn btn-outline-dark m-1" type="button" @click.prevent="toAccount">{{displayName}}</button>
             <button class="btn btn-outline-dark m-1" type="button" @click.prevent="logOut">Log out</button>
           </div>
           <div v-else>
@@ -51,14 +50,22 @@ export default {
     onAuthStateChanged(auth, (user) => {
       if(user) {
         this.stateStore.loggedIn = true
+        this.stateStore.user = user
       } else {
         this.stateStore.loggedIn = false
+        this.stateStore.user = null
       }
     })
   },
   computed: {
     ...mapStores(useStateStore),
-
+    displayName() {
+      if(this.stateStore.user) {
+        return this.stateStore.user.displayName
+      } else {
+        return "Account"
+      }
+    }
   },
   methods: {
     async logOut() {
@@ -71,9 +78,12 @@ export default {
         window.alert(error)
       }
     },
-    btnPress() {
-      console.log(this.isLoggedIn)
-      console.log(this.displayedName)      
+    toAccount() {
+      if(this.stateStore.loggedIn) {
+        this.$router.push("/account")
+      } else {
+        this.$router.push("/login")
+      }      
     }
   }
 

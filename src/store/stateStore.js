@@ -9,7 +9,7 @@ export const useStateStore = defineStore('state', {
     isPlaying: false,
     random: true,
     speed: 0.5,
-    userDisplayName: "Guest",
+    user: null,
     loggedIn: false,
     count: 40,
     startingArray: [],
