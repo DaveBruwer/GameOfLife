@@ -4,9 +4,8 @@
       <img :title="grid.name" :src="grid.image" class="thumbnail card-img-top" :alt="grid.name" >
     </button>
     <h5 class="">{{grid.name}}</h5>
-    <!-- <p class="">Created: {{ grid.creationDate.toDate().toDateString() }}</p> -->
     <div class="likes">
-      <p class="paragraph">by: {{ grid.userName }}</p>
+      <slot></slot>
       <p class="paragraph">
         <span>{{ grid.likes.length }} </span>
         <button title="like" class="btn btn-light" @click="likeBtn" v-html="likeSVG" :disabled="!stateStore.loggedIn"></button>

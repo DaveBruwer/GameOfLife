@@ -12,7 +12,9 @@
     <button class="btn btn-outline-dark mx-1" @click.prevent="sort">Go</button>
   </form>
   <div class="flexcontainer text-center">
-    <Grid v-for="grid in grids" :grid="grid"/>
+    <Grid v-for="grid in grids" :grid="grid">
+      <p class="paragraph">by: {{ grid.userName }}</p>
+    </Grid>
   </div>
 </template>
 
