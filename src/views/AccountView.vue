@@ -8,7 +8,7 @@
     <div id="loadingModal" tabindex="-1"  :style="[showLoadingModal ? { 'display': 'block' } : { 'display': 'none' }]">
       <h1 id="loadingContent">. . . loading . . .</h1>
     </div>
-    <div class="modal" id="deleteModal" tabindex="-1" :style="[showDeleteModal ? { 'display': 'block' } : { 'display': 'none' }]">
+    <div class="modal" :class="{ show: showDeleteModal }" id="deleteModal" tabindex="-1" :style="[showDeleteModal ? { 'display': 'block' } : { 'display': 'none' }]">
       <form>
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
@@ -22,7 +22,7 @@
               <div class="text-danger">Are you sure you want to permanently delet this grid?</div>
             </div>
             <div class="modal-footer">
-              <button @click.prevent="() => {showDeleteModal = false}" type="button" class="btn btn-outline-dark m-1" >Cancel</button>
+              <button @click.prevent="() => {showDeleteModal = false}" type="button" id="cancelButton" class="btn btn-outline-dark m-1" >Cancel</button>
               <button type="button" @click.prevent="confirmDelete" :disabled="disableDelete" class="btn btn-outline-danger m-1">Delete</button>
             </div>
           </div>
@@ -39,7 +39,7 @@
     </form>
     <div class="flexcontainer text-center">
       <Grid v-for="grid in grids" :grid="grid">
-        <button class="btn btn-outline-dark" @click.prevent="() => {deleteGrid(grid)}" v-html="trashSVG"></button>
+        <button class="btn btn-outline-dark" :disabled="showDeleteModal" @click.prevent="() => {deleteGrid(grid)}" v-html="trashSVG"></button>
       </Grid>
     </div>
   </div>
@@ -49,8 +49,8 @@
   import Grid from "../components/Grid.vue"
   import { mapStores } from 'pinia'
   import { useStateStore } from "../store/stateStore"
-  import {auth, db } from "../firebase"
-  import { collection, query, where, getDocs } from "@firebase/firestore"
+  import { db } from "../firebase"
+  import { collection, query, where, getDocs, doc, deleteDoc } from "@firebase/firestore"
 
   export default {
     data() {
@@ -77,16 +77,20 @@
         this.focussedGrid = grid
         this.showDeleteModal = true
         this.disableDelete = false
-        console.log("delete Grid")
-        console.log(this.focussedGrid)
-        console.log(this.showDeleteModal)
-        console.log(this.disableDelete)
       },
-      confirmDelete() {
+      async confirmDelete() {
         this.disableDelete = true
-        console.log(JSON.stringify(this.focussedGrid))
-        this.focussedGrid = null
-        this.showDeleteModal = false
+        try{
+          await deleteDoc(doc(db, "grids", this.focussedGrid.id))
+          console.log("grid deleted!")
+        }catch(error){
+          this.disableDelete = true
+          alert(error)
+          console.log(error)
+        }
+
+
+        location.reload()
 
         
       },
@@ -168,6 +172,10 @@
   opacity: 0.4;
   margin: 1em;
   padding: 50% 0;
+}
+
+#deleteModal {
+  z-index: 1;
 }
 
 .gridimg{
