@@ -81,7 +81,6 @@ export default {
             name: this.displayName
           })
         }).then( () => {
-          this.stateStore.userDisplayName = this.displayName
           this.stateStore.loggedIn = true
           this.$router.push('/')
         }).catch((error) => {

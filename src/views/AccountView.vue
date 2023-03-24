@@ -1,8 +1,9 @@
 <template>
   <div>
     <h3 class="m-2">{{ displayName }}</h3>
-    <button class="btn btn-outline-dark m-1">Update Name</button>
-    <button class="btn btn-outline-dark m-1">Change Password</button>
+    <nameModal />
+    <passwordModal />
+    <!-- <button @click.prevent="btnP" class="btn btn-outline-dark m-1">Change Password</button> -->
   </div>
   <div>
     <div id="loadingModal" tabindex="-1"  :style="[showLoadingModal ? { 'display': 'block' } : { 'display': 'none' }]">
@@ -47,6 +48,8 @@
   
 <script>
   import Grid from "../components/Grid.vue"
+  import nameModal from "../modals/nameModal.vue"
+  import passwordModal from "../modals/passwordModal.vue"
   import { mapStores } from 'pinia'
   import { useStateStore } from "../store/stateStore"
   import { db } from "../firebase"
@@ -66,6 +69,8 @@
     },
     components: {
       Grid,
+      nameModal,
+      passwordModal,
     },
     mounted() {
       if(this.stateStore.user){
@@ -73,6 +78,9 @@
       }
     },
     methods: {
+      btnP() {
+        console.log(this.stateStore.user)
+      },
       deleteGrid(grid){
         this.focussedGrid = grid
         this.showDeleteModal = true
