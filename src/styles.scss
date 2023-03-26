@@ -1,7 +1,7 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 
 $theme-colors: (
-  "primary":    red,
+  "primary":    $primary,
   "secondary":  $secondary,
   "success":    $success,
   "info":       $info,

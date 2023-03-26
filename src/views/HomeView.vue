@@ -1,7 +1,8 @@
 <template>
   <div align="center">
     <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
-    <div :style="{width: this.controlsWidth}">
+    <!-- <div :style="{width: this.controlsWidth}"> -->
+    <div>
         <Controls :createPNG="createPNG" :gridSnapshot="gridSnapshot" :toggleRandom="toggleRandom" :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
     </div>
   </div>
@@ -19,7 +20,7 @@ export default {
         imgSrc: '',
       canvasID: "mainCanvas",
       canvas: undefined,
-      controlsWidth: "741px",
+    //   controlsWidth: "741px",
       ctx: undefined,
       grid: {
           array: [],
