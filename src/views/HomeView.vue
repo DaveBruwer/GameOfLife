@@ -278,6 +278,7 @@ export default {
       },
       sizeUpdate(e) {
           this.stateStore.count = e;
+          this.stateStore.startingArray = []
           this.gridCreate();
           this.grid.firstInit = false;
           this.gridInit();
