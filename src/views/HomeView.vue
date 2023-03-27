@@ -80,7 +80,7 @@ export default {
           this.grid.left = 0
           this.grid.top = 0
 
-          this.ctx.strokeStyle = "#3d3d29";
+          this.ctx.strokeStyle = "#d3d3d3";
           this.ctx.strokeRect(
               this.grid.left,
               this.grid.top,
@@ -123,10 +123,15 @@ export default {
 
           this.grid.cellSize = this.grid.gridSize / this.stateStore.count;
 
-          this.grid.array.forEach((cell, i) => {
-              cell.top = this.grid.top + this.grid.cellSize * (cell.col);
-              cell.left = this.grid.left + this.grid.cellSize * (cell.row);
-          })
+        //   this.grid.array.forEach((cell, i) => {
+        //       cell.top = this.grid.top + this.grid.cellSize * (cell.col);
+        //       cell.left = this.grid.left + this.grid.cellSize * (cell.row);
+        //   })
+
+          for (let i = 0; i < this.numOfCells; i++) {
+            this.grid.array[i].top = this.grid.top + this.grid.cellSize * (this.grid.array[i].col)
+            this.grid.array[i].left = this.grid.left + this.grid.cellSize * (this.grid.array[i].row)
+          }
 
           if (!this.grid.firstInit) {
                   this.grid.firstInit = true;
@@ -148,16 +153,21 @@ export default {
           this.ctx.clearRect(
               this.grid.left,
               this.grid.top,
-              this.grid.width,
-              this.grid.height
+              this.grid.gridSize,
+              this.grid.gridSize
           );
 
-          this.grid.array.forEach((cell, i) => {
+        //   this.grid.array.forEach((cell, i) => {
+        //       if (cell.alive != cell.nextAlive || !this.grid.started) {
+        //           this.cellUpdate(cell, i);                
+        //       }
+        //   });
 
-              if (cell.alive != cell.nextAlive || !this.grid.started) {
-                  this.cellUpdate(cell, i);                
+          for (let i = 0; i < this.numOfCells; i++) {
+            if (this.grid.array[i].alive != this.grid.array[i].nextAlive || !this.grid.started) {
+                  this.cellUpdate(this.grid.array[i], i);                
               }
-          });
+          }
 
           setTimeout(() => { if(this.grid.playing) {this.lifeUpdate()}}, this.stateStore.speed*1000);
 
@@ -165,15 +175,7 @@ export default {
       cellUpdate(cell, i) {
             // Fills the cell colour based on the cell.nextAlive attribute.
             if (cell.nextAlive) {
-                this.ctx.fillStyle = "#adad85";
-                this.ctx.fillRect(
-                    cell.left,
-                    cell.top,
-                    this.grid.cellSize,
-                    this.grid.cellSize
-                );
-            } else {
-                this.ctx.fillStyle = "#f5f5f0";
+                this.ctx.fillStyle = "#696969";
                 this.ctx.fillRect(
                     cell.left,
                     cell.top,
@@ -181,12 +183,21 @@ export default {
                     this.grid.cellSize
                 );
             }
+            // } else {
+            //     this.ctx.fillStyle = "#f5f5f0";
+            //     this.ctx.fillRect(
+            //         cell.left,
+            //         cell.top,
+            //         this.grid.cellSize,
+            //         this.grid.cellSize
+            //     );
+            // }
 
             // Updates the cell.alive property to match updated state.
             cell.alive = cell.nextAlive;
 
             // draw the borders of the cell to prevent fading borders.
-            this.ctx.strokeStyle = "#3d3d29";
+            this.ctx.strokeStyle = "#ffffff"; // #ffffff
             this.ctx.strokeRect(
                 cell.left,
                 cell.top,
@@ -198,21 +209,37 @@ export default {
           // updates cells .alive property based on the rules of the game.
           requestAnimationFrame(() => {
   
-              this.grid.array.forEach((cell, i) => {
-                  cell.crowd = this.crowdSize(cell, i);
+            //   this.grid.array.forEach((cell, i) => {
+            //       cell.crowd = this.crowdSize(cell, i);
   
-                  if (cell.alive) {
-                      if (cell.crowd < 2 || cell.crowd > 3) {
-                          cell.nextAlive = false;
+            //       if (cell.alive) {
+            //           if (cell.crowd < 2 || cell.crowd > 3) {
+            //               cell.nextAlive = false;
+            //           } else {
+            //               cell.nextAlive = true;
+            //           }
+            //       } else {
+            //           if (cell.crowd == 3) {
+            //               cell.nextAlive = true;
+            //           }
+            //       }
+            //   });
+
+              for (let i = 0; i < this.numOfCells; i++) {
+                this.grid.array[i].crowd = this.crowdSize(this.grid.array[i], i);
+  
+                  if (this.grid.array[i].alive) {
+                      if (this.grid.array[i].crowd < 2 || this.grid.array[i].crowd > 3) {
+                          this.grid.array[i].nextAlive = false;
                       } else {
-                          cell.nextAlive = true;
+                          this.grid.array[i].nextAlive = true;
                       }
                   } else {
-                      if (cell.crowd == 3) {
-                          cell.nextAlive = true;
+                      if (this.grid.array[i].crowd == 3) {
+                          this.grid.array[i].nextAlive = true;
                       }
                   }
-              });
+              }
 
               this.gridUpdate();
           });
@@ -231,13 +258,20 @@ export default {
           if (cell.col < this.stateStore.count-1) {neighbours.push(this.stateStore.count)};
           if (cell.row < this.stateStore.count-1 && cell.col < this.stateStore.count-1) {neighbours.push(this.stateStore.count + 1)};
 
-          neighbours.forEach((neighbour) => {
-              const thisIdx = idx + neighbour;
+        //   neighbours.forEach((neighbour) => {
+        //       const thisIdx = idx + neighbour;
               
+        //       if (this.grid.array[thisIdx].alive) {
+        //           crowdSize++;
+        //       }
+        //   })
+
+          for (let i = 0; i < neighbours.length; i++) {
+            const thisIdx = idx + neighbours[i];
               if (this.grid.array[thisIdx].alive) {
                   crowdSize++;
               }
-          })
+          }
 
           return crowdSize;
       }, 
@@ -300,6 +334,10 @@ export default {
 </script>
 
 <style>
+
+canvas {
+    background-color: #d3d3d3;
+}
 
 
 </style>
