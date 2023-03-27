@@ -1,6 +1,6 @@
 <template>
   <!-- Button trigger modal -->
-  <button :disabled="stateStore.isPlaying" title="Save Grid" @click.prevent="saveBtn" type="button" class="mx-1 btn col btn-outline-dark btn-sm" v-html="saveSVG">
+  <button :disabled="stateStore.isPlaying" title="Save Grid" @click.prevent="saveBtn" type="button" class="m-1 btn btn-outline-dark btn-sm" v-html="saveSVG">
   </button>
 
   <!-- Modal -->                      
