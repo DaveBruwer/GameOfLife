@@ -1,8 +1,8 @@
 <template>
   <div align="center">
     <canvas :id="canvasID" class="mainCanvas" @click.prevent="toggleCell"></canvas>
-    <!-- <div :style="{width: this.controlsWidth}"> -->
-    <div>
+    <div :style="{width: controlsWidth}">
+    <!-- <div :style="{width: controlsWidth}"> -->
         <Controls :createPNG="createPNG" :gridSnapshot="gridSnapshot" :toggleRandom="toggleRandom" :resetGrid="resetGrid" :playPause="playPause" :lifeUpdate="lifeUpdate" @sizeUpdate="sizeUpdate" :sizeSelection="grid.count"/>
     </div>
   </div>
@@ -56,6 +56,13 @@ export default {
       },
       numOfCells() {
           return this.stateStore.count * this.stateStore.count;
+      },
+      controlsWidth() {
+        if(this.canvas) {
+            return this.canvas.width + 'px'
+        } else {
+            return 'auto'
+        }
       }
   },
   methods: {
@@ -164,9 +171,9 @@ export default {
         //   });
 
           for (let i = 0; i < this.numOfCells; i++) {
-            if (this.grid.array[i].alive != this.grid.array[i].nextAlive || !this.grid.started) {
-                  this.cellUpdate(this.grid.array[i], i);                
-              }
+            // if (this.grid.array[i].alive != this.grid.array[i].nextAlive || !this.grid.started) {
+            // }
+            this.cellUpdate(this.grid.array[i], i);                
           }
 
           setTimeout(() => { if(this.grid.playing) {this.lifeUpdate()}}, this.stateStore.speed*1000);
@@ -207,42 +214,43 @@ export default {
         },
       lifeUpdate() {
           // updates cells .alive property based on the rules of the game.
-          requestAnimationFrame(() => {
+        //   requestAnimationFrame(() => {
   
-            //   this.grid.array.forEach((cell, i) => {
-            //       cell.crowd = this.crowdSize(cell, i);
-  
-            //       if (cell.alive) {
-            //           if (cell.crowd < 2 || cell.crowd > 3) {
-            //               cell.nextAlive = false;
-            //           } else {
-            //               cell.nextAlive = true;
-            //           }
-            //       } else {
-            //           if (cell.crowd == 3) {
-            //               cell.nextAlive = true;
-            //           }
-            //       }
-            //   });
+                //   this.grid.array.forEach((cell, i) => {
+                //       cell.crowd = this.crowdSize(cell, i);
+    
+                //       if (cell.alive) {
+                //           if (cell.crowd < 2 || cell.crowd > 3) {
+                //               cell.nextAlive = false;
+                //           } else {
+                //               cell.nextAlive = true;
+                //           }
+                //       } else {
+                //           if (cell.crowd == 3) {
+                //               cell.nextAlive = true;
+                //           }
+                //       }
+                //   });
 
-              for (let i = 0; i < this.numOfCells; i++) {
-                this.grid.array[i].crowd = this.crowdSize(this.grid.array[i], i);
-  
-                  if (this.grid.array[i].alive) {
-                      if (this.grid.array[i].crowd < 2 || this.grid.array[i].crowd > 3) {
-                          this.grid.array[i].nextAlive = false;
-                      } else {
-                          this.grid.array[i].nextAlive = true;
-                      }
+            // });
+            // Determines the crowd size and set the nextAlive property for each cell.
+          for (let i = 0; i < this.numOfCells; i++) {
+            this.grid.array[i].crowd = this.crowdSize(this.grid.array[i], i);
+
+              if (this.grid.array[i].alive) {
+                  if (this.grid.array[i].crowd < 2 || this.grid.array[i].crowd > 3) {
+                      this.grid.array[i].nextAlive = false;
                   } else {
-                      if (this.grid.array[i].crowd == 3) {
-                          this.grid.array[i].nextAlive = true;
-                      }
+                      this.grid.array[i].nextAlive = true;
+                  }
+              } else {
+                  if (this.grid.array[i].crowd == 3) {
+                      this.grid.array[i].nextAlive = true;
                   }
               }
+          }
 
-              this.gridUpdate();
-          });
+          this.gridUpdate();
       },
       crowdSize(cell, idx) {
           let crowdSize = 0;

@@ -25,8 +25,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row justify-content-evenly mx-2">
-    </div> -->
   </div>
 </template>
 
