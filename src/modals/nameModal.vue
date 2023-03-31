@@ -1,6 +1,6 @@
 <template>
   <!-- Button trigger modal -->
-  <button :disabled="showModal" title="Update Name" @click.prevent="nameBtn" type="button" class="mx-1 btn col btn-outline-dark">Udate Name</button>
+  <button :disabled="showModal" title="Update Name" @click.prevent="nameBtn" type="button" class="mx-1 btn col btn-outline-dark">Update Name</button>
 
   <!-- Modal -->                      
   <form @submit.prevent="submitModal" class="modal" :class="{ show: showModal }" id="nameModal" tabindex="-1" aria-labelledby="nameModalLabel" aria-hidden="true" :style="[showModal ? { 'display': 'block' } : { 'display': 'none' }]">
