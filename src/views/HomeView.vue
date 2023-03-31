@@ -189,16 +189,15 @@ export default {
                     this.grid.cellSize,
                     this.grid.cellSize
                 );
+            } else {
+                this.ctx.fillStyle = "#d3d3d3";
+                this.ctx.fillRect(
+                    cell.left,
+                    cell.top,
+                    this.grid.cellSize,
+                    this.grid.cellSize
+                );
             }
-            // } else {
-            //     this.ctx.fillStyle = "#f5f5f0";
-            //     this.ctx.fillRect(
-            //         cell.left,
-            //         cell.top,
-            //         this.grid.cellSize,
-            //         this.grid.cellSize
-            //     );
-            // }
 
             // Updates the cell.alive property to match updated state.
             cell.alive = cell.nextAlive;
@@ -296,21 +295,21 @@ export default {
           }
       },
       toggleCell(e) {
-          const clickx = e.x - this.grid.left - this.canvasLeft;
-          const clicky = e.y - this.grid.top - this.canvasTop;
+        const clickx = e.x - this.grid.left - this.canvasLeft;
+        const clicky = e.y - this.grid.top - this.canvasTop;
 
-          const _col = Math.ceil(clickx / this.grid.cellSize) -1;
-          const _row = Math.ceil(clicky / this.grid.cellSize) -1;
+        const _col = Math.ceil(clickx / this.grid.cellSize) -1;
+        const _row = Math.ceil(clicky / this.grid.cellSize) -1;
 
-          if (_col >= 0 && _col < this.stateStore.count) {
-              if (_row >= 0 && _row < this.stateStore.count) {
-                  const _indx = _row*this.stateStore.count + _col;
-      
-                  this.grid.array[_indx].nextAlive = !this.grid.array[_indx].nextAlive;
-      
-                  this.cellUpdate(this.grid.array[_indx], _indx);
-              }
+        if (_col >= 0 && _col < this.stateStore.count) {
+          if (_row >= 0 && _row < this.stateStore.count) {
+            const _indx = _row*this.stateStore.count + _col;
+
+            this.grid.array[_indx].nextAlive = !this.grid.array[_indx].nextAlive;
+
+            this.cellUpdate(this.grid.array[_indx], _indx);
           }
+        }
       },
       resetGrid() {
             this.grid.started = false;
