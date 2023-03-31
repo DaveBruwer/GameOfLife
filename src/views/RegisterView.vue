@@ -29,7 +29,7 @@
   <div class="m-3">
     <RouterLink to="/login">Login</RouterLink>
   </div>
-  <button type="submit" class="btn btn-primary m-3">Submit</button>
+  <button type="submit" :disabled="disableSumbit" class="btn btn-primary m-3">Submit</button>
 </form>
 </template>
 
@@ -53,6 +53,7 @@ export default {
       registerEmail: "",
       registerPassword: "",
       confirmPassword: "",
+      disableSumbit: false
     }
   },
   computed: {
@@ -68,6 +69,7 @@ export default {
   },
   methods: {
     async registerNewUser() {
+      this.disableSumbit = true
       const isFormCorrect = await this.v$.$validate()
 
       if (isFormCorrect) {
@@ -89,6 +91,7 @@ export default {
         })
       } else {
         alert("Invalid form data.")
+        this.disableSumbit = false
       }
     }
   }

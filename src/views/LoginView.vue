@@ -15,9 +15,9 @@
   </div>
   <div class="link-container m-3">
     <RouterLink to="/register">Register</RouterLink>
-    <a href="#" @click.prevent="forgotPassword">Forgot Password</a>
+    <a href="#" :disabled="disableSumbit" @click.prevent="forgotPassword">Forgot Password</a>
   </div>
-  <button type="submit" class="btn btn-primary m-3">Submit</button>
+  <button type="submit" :disabled="disableSumbit" class="btn btn-primary m-3">Submit</button>
 </form>
 </template>
 
@@ -37,7 +37,8 @@ export default {
   data() {
     return {
       exampleInputEmail1: "",
-      exampleInputPassword1: ""
+      exampleInputPassword1: "",
+      disableSumbit: false
     }
   },
   validations() {
@@ -51,6 +52,8 @@ export default {
   },
   methods: {
     async signInUser() {
+      this.disableSumbit = true
+
       const isFormCorrect = await this.v$.$validate()
 
       if (isFormCorrect) {
@@ -67,15 +70,18 @@ export default {
         })
       } else {
         alert("Invalid form data.")
+        this.disableSumbit = false
       }
     },
     async forgotPassword() {
+      this.disableSumbit = true
       sendPasswordResetEmail(auth, exampleInputEmail1.value)
         .then(() => {
           alert("An email has been sent with instructions to reset your password.")
         })
         .catch((error) => {
           alert(error.message)
+          this.disableSumbit = false
       })
     }
   }

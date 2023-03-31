@@ -92,6 +92,8 @@
             likes: [],
             creationDate: Timestamp.now()
           }).then(() => {
+            this.saveName = ""
+            this.disableSumbit = false
             this.showModal = false
             console.log("grid save successful")
           }).catch((error) => {
